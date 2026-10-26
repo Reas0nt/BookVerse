@@ -64,6 +64,7 @@ Out of scope: deployment, MySQL, external integrations.
 - T5 done: sistema/README.md + root README; smoke test with admin login: all main pages 200.
 
 - Follow-up (5bdb32e): equipment registration admin-only (user decision, case RF-06 alt flow implies prior registration); RF-06/RF-08 alternate-flow messages aligned with case wording. pytest 45 passed. RDD high: consent granted, 4-lens review approved and acknowledged (review-1558753bddc2985d). Advisory: empty-history message is misleading when filters are applied.
+- Follow-up (e676847): history shows "No hay mantenimientos realizados." only when no filters are applied; with filters and no matches it shows "Ningún mantenimiento coincide con la búsqueda." pytest 46 passed. RDD assess: medium, under_budget (23 lines) → pending in slice, no review yet.
 - Port 5110 documented (71bf809) because port 5000 is used by another service.
 
 Open questions (product):
