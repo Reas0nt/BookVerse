@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Software{% endblock %}
+{% block header %}Listado de aplicaciones{% endblock %}
+{% block content %}
+<p>
+  <a class="button" href="{{ url_for('software.update') }}">Registrar actualización</a>
+  <a class="button" href="{{ url_for('software.updates') }}">Ver actualizaciones</a>
+  {% if g.user['role'] == 'administrador' %}<a class="button" href="{{ url_for('software.create') }}">Agregar software</a>{% endif %}
+</p>
+<table>
+  <thead><tr><th>Nombre</th><th>Versión actual</th><th>Descripción</th></tr></thead>
+  <tbody>
+  {% for s in software %}
+    <tr><td>{{ s['name'] }}</td><td>{{ s['current_version'] }}</td><td>{{ s['description'] }}</td></tr>
+  {% else %}
+    <tr><td colspan="3">No hay software registrado.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

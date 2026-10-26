@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Actualización de software{% endblock %}
+{% block header %}Registrar actualización de software{% endblock %}
+{% block content %}
+<form method="post" class="card">
+  <label for="software_name">Software</label>
+  <input name="software_name" id="software_name" list="software-list" value="{{ values.get('software_name', '') }}" required>
+  <datalist id="software-list">
+    {% for s in software %}<option value="{{ s['name'] }}">versión actual {{ s['current_version'] }}</option>{% endfor %}
+  </datalist>
+  <label for="equipment_id">Equipo</label>
+  <select name="equipment_id" id="equipment_id" required>
+    <option value="">Seleccione...</option>
+    {% for e in equipment %}
+    <option value="{{ e['id'] }}" {{ 'selected' if values.get('equipment_id') == e['id']|string }}>{{ e['code'] }} - {{ e['hostname'] }}</option>
+    {% endfor %}
+  </select>
+  <label for="previous_version">Versión anterior</label>
+  <input name="previous_version" id="previous_version" value="{{ values.get('previous_version', '') }}" required>
+  <label for="new_version">Versión nueva</label>
+  <input name="new_version" id="new_version" value="{{ values.get('new_version', '') }}" required>
+  <label for="updated_on">Fecha</label>
+  <input type="date" name="updated_on" id="updated_on" value="{{ values.get('updated_on', '') }}" required>
+  <label for="method">Método</label>
+  <select name="method" id="method">
+    {% for key, label in methods.items() %}<option value="{{ key }}" {{ 'selected' if values.get('method') == key }}>{{ label }}</option>{% endfor %}
+  </select>
+  <label for="changes">Cambios realizados</label>
+  <textarea name="changes" id="changes" rows="3">{{ values.get('changes', '') }}</textarea>
+  <button type="submit">Guardar</button>
+  <a href="{{ url_for('software.index') }}">Cancelar</a>
+</form>
+{% endblock %}

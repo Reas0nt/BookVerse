@@ -14,6 +14,7 @@
       <li><a href="{{ url_for('equipos.index') }}">Equipos</a></li>
       <li><a href="{{ url_for('mantenimientos.create') }}">Registrar mantenimiento</a></li>
       <li><a href="{{ url_for('mantenimientos.history') }}">Historial</a></li>
+      <li><a href="{{ url_for('software.index') }}">Software</a></li>
       {% block nav_extra %}{% endblock %}
     </ul>
     <form class="logout" method="post" action="{{ url_for('auth.logout') }}">

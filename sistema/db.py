@@ -16,6 +16,13 @@ SEED_EQUIPMENT = [
     ("EQ-003", "BV-IMP-01", "Impresora", "Sucursal Centro - Administracion", "SN-IM-0003", "operativo"),
 ]
 
+SEED_SOFTWARE = [
+    ("Windows 11", "23H2", "Sistema operativo de los equipos de oficina"),
+    ("Microsoft Office", "2021", "Suite ofimática"),
+    ("Antivirus ESET", "17.0", "Protección antimalware"),
+    ("Google Chrome", "126.0", "Navegador web"),
+]
+
 
 def get_db():
     """Return the per-request connection, creating it on first use."""
@@ -46,6 +53,10 @@ def init_db():
         "INSERT INTO equipment (code, hostname, type, location, serial_number, status)"
         " VALUES (?, ?, ?, ?, ?, ?)",
         SEED_EQUIPMENT,
+    )
+    db.executemany(
+        "INSERT INTO software (name, current_version, description) VALUES (?, ?, ?)",
+        SEED_SOFTWARE,
     )
     db.commit()
 

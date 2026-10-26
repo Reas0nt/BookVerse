@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Agregar software{% endblock %}
+{% block header %}Agregar software al listado{% endblock %}
+{% block content %}
+<form method="post" class="card">
+  <label for="name">Nombre</label>
+  <input name="name" id="name" value="{{ values.get('name', '') }}" required>
+  <label for="current_version">Versión actual</label>
+  <input name="current_version" id="current_version" value="{{ values.get('current_version', '') }}" required>
+  <label for="description">Descripción</label>
+  <input name="description" id="description" value="{{ values.get('description', '') }}">
+  <button type="submit">Guardar</button>
+  <a href="{{ url_for('software.index') }}">Cancelar</a>
+</form>
+{% endblock %}
