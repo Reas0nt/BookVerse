@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Registrar mantenimiento{% endblock %}
+{% block header %}Registrar mantenimiento{% endblock %}
+{% block content %}
+<form method="post" class="card">
+  <label for="equipment_id">Equipo</label>
+  <select name="equipment_id" id="equipment_id" required>
+    <option value="">Seleccione...</option>
+    {% for e in equipment %}
+    <option value="{{ e['id'] }}" {{ 'selected' if values.get('equipment_id') == e['id']|string }}>{{ e['code'] }} - {{ e['hostname'] }}</option>
+    {% endfor %}
+  </select>
+  <label for="type">Tipo</label>
+  <select name="type" id="type">
+    {% for t in types %}<option value="{{ t }}" {{ 'selected' if values.get('type') == t }}>{{ t|capitalize }}</option>{% endfor %}
+  </select>
+  <label for="performed_on">Fecha</label>
+  <input type="date" name="performed_on" id="performed_on" value="{{ values.get('performed_on', '') }}" required>
+  <label for="description">Descripción de la intervención</label>
+  <textarea name="description" id="description" rows="3" required>{{ values.get('description', '') }}</textarea>
+  <label for="observations">Observaciones</label>
+  <textarea name="observations" id="observations" rows="3">{{ values.get('observations', '') }}</textarea>
+  <button type="submit">Guardar</button>
+</form>
+{% endblock %}

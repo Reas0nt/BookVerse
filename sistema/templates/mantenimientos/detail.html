@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Detalle de mantenimiento{% endblock %}
+{% block header %}Mantenimiento #{{ m['id'] }}{% endblock %}
+{% block content %}
+<dl class="card">
+  <dt>Fecha</dt><dd>{{ m['performed_on'] }}</dd>
+  <dt>Tipo</dt><dd>{{ m['type']|capitalize }}</dd>
+  <dt>Equipo</dt><dd>{{ m['code'] }} - {{ m['hostname'] }} ({{ m['equipment_type'] }}, serie {{ m['serial_number'] }})</dd>
+  <dt>Detalle de la intervención</dt><dd>{{ m['description'] }}</dd>
+  <dt>Observaciones</dt><dd>{{ m['observations'] or 'Sin observaciones' }}</dd>
+  <dt>Técnico</dt><dd>{{ m['technician'] }}</dd>
+</dl>
+<p><a href="{{ url_for('mantenimientos.history') }}">Volver al historial</a></p>
+{% endblock %}

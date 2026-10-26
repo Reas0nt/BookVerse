@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS maintenance;
 DROP TABLE IF EXISTS equipment;
 DROP TABLE IF EXISTS user;
 
@@ -17,4 +18,15 @@ CREATE TABLE equipment (
     location TEXT NOT NULL,
     serial_number TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'operativo'
+);
+
+CREATE TABLE maintenance (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    equipment_id INTEGER NOT NULL REFERENCES equipment (id),
+    technician_id INTEGER NOT NULL REFERENCES user (id),
+    type TEXT NOT NULL CHECK (type IN ('preventivo', 'correctivo')),
+    performed_on TEXT NOT NULL,
+    description TEXT NOT NULL,
+    observations TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

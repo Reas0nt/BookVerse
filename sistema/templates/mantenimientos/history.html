@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Historial de mantenimientos{% endblock %}
+{% block header %}Historial de mantenimientos{% endblock %}
+{% block content %}
+<form method="get" class="filters">
+  <div><label for="desde">Desde</label><input type="date" name="desde" id="desde" value="{{ filters.get('desde', '') }}"></div>
+  <div><label for="hasta">Hasta</label><input type="date" name="hasta" id="hasta" value="{{ filters.get('hasta', '') }}"></div>
+  <div><label for="tipo">Tipo</label>
+    <select name="tipo" id="tipo">
+      <option value="">Todos</option>
+      {% for t in types %}<option value="{{ t }}" {{ 'selected' if filters.get('tipo') == t }}>{{ t|capitalize }}</option>{% endfor %}
+    </select></div>
+  <div><label for="equipo">Código o N° de serie</label><input name="equipo" id="equipo" value="{{ filters.get('equipo', '') }}"></div>
+  <div><button type="submit">Filtrar</button></div>
+</form>
+<table>
+  <thead><tr><th>Fecha</th><th>Equipo</th><th>Tipo</th><th>Técnico</th><th></th></tr></thead>
+  <tbody>
+  {% for r in rows %}
+    <tr>
+      <td>{{ r['performed_on'] }}</td><td>{{ r['code'] }} ({{ r['serial_number'] }})</td>
+      <td>{{ r['type']|capitalize }}</td><td>{{ r['technician'] }}</td>
+      <td><a href="{{ url_for('mantenimientos.detail', maintenance_id=r['id']) }}">Ver detalle</a></td>
+    </tr>
+  {% else %}
+    <tr><td colspan="5">No se encontraron registros.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
