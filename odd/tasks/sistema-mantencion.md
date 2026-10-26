@@ -55,6 +55,17 @@ Out of scope: deployment, MySQL, external integrations.
 
 (Updated after each task.)
 
-- T1 done: `venv/bin/python -m pytest sistema/tests -q`: 9 passed; `flask --app sistema init-db` smoke OK (instance removed afterwards).  step
+- T1 done (047045e): `venv/bin/python -m pytest sistema/tests -q`: 9 passed; `flask --app sistema init-db` smoke OK (instance removed afterwards).
+- T2 done (0c5f441): pytest 20 passed. History query/detail open to both roles; DB error returns 503 page (test monkeypatches get_db).
+- T3 done (890539a): pytest 28 passed. Update form takes software name; unknown name shows "must be registered first"; update sets current version.
+- T4 done (4ceb489): pytest 44 passed. Validation requires a prior maintenance; "Falla" requires observations and flags equipment "requiere nueva intervención". Salida > stock rejected ("Stock insuficiente"). Part creation/status change admin-only.
+- Parent spot check: `venv/bin/python -m pytest sistema/tests -q`: 44 passed.
+- RDD: assess on 9a603ab..HEAD → risk high (hot paths: auth, update). Review pending.
 
-T2.
+Open questions (product):
+- Should technicians be able to register new equipment? (Currently any logged-in user can.)
+- Should software updates be linked to a maintenance record? (Currently standalone.)
+
+## Next step
+
+RDD review of the branch slice, then T5 (docs).
