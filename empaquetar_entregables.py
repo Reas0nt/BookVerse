@@ -41,14 +41,22 @@ SYSTEM_FILES = ["requirements.txt", "requirements-dev.txt"]
 SYSTEM_SKIP = {"__pycache__", "instance", ".pytest_cache"}
 
 
+def check_sources():
+    """Fail before touching the output folder if any source file is missing."""
+    required = [rel for _, files in DELIVERABLES for rel in files] + SYSTEM_FILES
+    required += ["semana11-evaluacion/diagramas", "sistema/README.md"]
+    missing = [rel for rel in required if not (ROOT / rel).exists()]
+    if missing:
+        raise SystemExit("[ERROR] Faltan archivos (ejecute sus scripts generadores primero):\n  "
+                         + "\n  ".join(missing))
+
+
 def copy_deliverables():
     for folder, files in DELIVERABLES:
         dest = OUT / folder
         dest.mkdir(parents=True)
         for rel in files:
             src = ROOT / rel
-            if not src.exists():
-                raise SystemExit(f"[ERROR] Falta el archivo {rel}. Ejecute su script generador primero.")
             shutil.copy2(src, dest / src.name)
 
 
@@ -86,11 +94,16 @@ def export_pdfs():
         return
     for doc in sorted(OUT.rglob("*")):
         if doc.suffix in (".docx", ".pptx"):
-            subprocess.run([soffice, "--headless", "--convert-to", "pdf", "--outdir", str(doc.parent), str(doc)],
-                           check=True, capture_output=True, timeout=180)
+            try:
+                subprocess.run([soffice, "--headless", "--convert-to", "pdf", "--outdir", str(doc.parent), str(doc)],
+                               check=True, capture_output=True, timeout=180)
+            except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as error:
+                print(f"[AVISO] No se pudo crear el PDF de {doc.name}: {error}. "
+                      "Cierre LibreOffice si está abierto y vuelva a ejecutar.")
 
 
 def main():
+    check_sources()
     if OUT.exists():
         shutil.rmtree(OUT)
     OUT.mkdir()
