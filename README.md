@@ -9,6 +9,8 @@ Deliverables for the BookVerse case, stage 2: office equipment maintenance (RF-0
 | `docs/` | Case study and activity guidelines provided by the course |
 | `semana7-avance1/` | Avance #1 (RF-06): Gantt chart and checklist |
 | `semana8-avance2/` | Avance #2 (RF-07): progress report and software registry |
+| `semana9-avance3/` | Avance #3 (RF-08): maintenance history workbook and report |
+| `semana10-avance4/` | Avance #4 (RF-09): spare parts inventory workbook and report |
 | `semana11-evaluacion/` | Week 11 practical evaluation: presentation deck, Excalidraw diagrams and system screenshots |
 | `sistema/` | Web app covering RF-06 to RF-09 (see [sistema/README.md](sistema/README.md)) |
 
@@ -33,6 +35,8 @@ Run each script from its own folder:
 ```bash
 cd semana7-avance1 && python generar_excel_semana7.py && cd ..
 cd semana8-avance2 && python generar_excel_semana8.py && python generar_informe_semana8.py && cd ..
+cd semana9-avance3 && python generar_excel_semana9.py && python generar_informe_semana9.py && cd ..
+cd semana10-avance4 && python generar_excel_semana10.py && python generar_informe_semana10.py && cd ..
 python semana11-evaluacion/generar_presentacion.py   # diagrams/screenshots are pre-rendered; regenerating them needs internet (kroki.io) and Firefox
 ```
 
