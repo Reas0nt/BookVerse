@@ -35,7 +35,7 @@ Out of scope: recording the video, real lab inventory data, Avance 3/4 Word docu
 
 - [x] T1 Diagrams: process flow S7-S11, system architecture, data model, KVM error resolution (`.excalidraw` + `.png`). Route: delegated writer.
 - [x] T2 System screenshots (login, history, maintenance form, spare parts). Route: delegated writer.
-- [ ] T3 Deck generator + PPTX with speaker notes, visual QA. Route: delegated writer.
+- [x] T3 Deck generator + PPTX with speaker notes, visual QA. Route: delegated writer.
 
 ## Acceptance criteria
 
@@ -49,7 +49,8 @@ Out of scope: recording the video, real lab inventory data, Avance 3/4 Word docu
 
 - T1: 4 diagrams (`proceso`, `arquitectura`, `modelo_datos`, `error_kvm`) generated as `.excalidraw` + `.png` via Kroki + headless Firefox; every PNG inspected visually, no overlaps or overflow.
 - T2: 5 screenshots in `semana11-evaluacion/capturas/` (login, historial, registro, repuestos, actualizaciones) from Flask test client + headless Firefox; all inspected visually.
+- T3: 18-slide deck with Spanish speaker notes built by `generar_presentacion.py`; `validate.py` passed, `slide_text.py` shows only the allowed placeholders, all 18 slide renders inspected; `pytest sistema/tests -q`: 46 passed. `python-pptx==1.0.2` added to requirements.txt. Added `carta_gantt.png` (rendered from the Excel workbook).
 
 ## Next step
 
-T1.
+Review the deck, fill in the teacher name and the video link, and record the video.
