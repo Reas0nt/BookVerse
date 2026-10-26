@@ -51,6 +51,8 @@ Out of scope: recording the video, real lab inventory data, Avance 3/4 Word docu
 - T2: 5 screenshots in `semana11-evaluacion/capturas/` (login, historial, registro, repuestos, actualizaciones) from Flask test client + headless Firefox; all inspected visually.
 - T3: 18-slide deck with Spanish speaker notes built by `generar_presentacion.py`; `validate.py` passed, `slide_text.py` shows only the allowed placeholders, all 18 slide renders inspected; `pytest sistema/tests -q`: 46 passed. `python-pptx==1.0.2` added to requirements.txt. Added `carta_gantt.png` (rendered from the Excel workbook).
 
+- RDD: assess 9cf4310..a39919b high (process spawning in generar_capturas.py); consent granted; 4-lens review approved and acknowledged. 14 advisory findings (fragile form prefill, unchecked sample data, temp dir/profile leaks, diagram source/PNG divergence, readability nits) kept as optional follow-ups.
+
 ## Next step
 
 Review the deck, fill in the teacher name and the video link, and record the video.
