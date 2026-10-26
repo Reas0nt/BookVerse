@@ -9,6 +9,7 @@ Deliverables for the BookVerse case, stage 2: office equipment maintenance (RF-0
 | `docs/` | Case study and activity guidelines provided by the course |
 | `semana7-avance1/` | Avance #1 (RF-06): Gantt chart and checklist |
 | `semana8-avance2/` | Avance #2 (RF-07): progress report and software registry |
+| `sistema/` | Web app covering RF-06 to RF-09 (see [sistema/README.md](sistema/README.md)) |
 
 Each `generar_*.py` script builds the `.docx` / `.xlsx` file next to it.
 
@@ -21,7 +22,7 @@ Each `generar_*.py` script builds the `.docx` / `.xlsx` file next to it.
 ```bash
 python3 -m venv venv
 source venv/bin/activate        # Windows: venv\Scripts\activate
-pip install -r requirements.txt
+pip install -r requirements.txt       # add -dev to also install test tools
 ```
 
 ## Regenerate the files

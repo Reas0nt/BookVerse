@@ -43,7 +43,7 @@ Out of scope: deployment, MySQL, external integrations.
 - [x] T2 RF-06 maintenance registration + RF-08 history query (filters, detail, DB error message), tests. Route: delegated writer.
 - [x] T3 RF-07 software catalog + update records, unregistered software message, tests. Route: delegated writer.
 - [x] T4 RF-09 software validation after maintenance + spare parts inventory (entries/exits/status, non-negative stock), tests. Route: delegated writer.
-- [ ] T5 Docs: `sistema/README.md` (setup, run, default users, RF mapping) and root README update. Route: inline (mechanical).
+- [x] T5 Docs: `sistema/README.md` (setup, run, default users, RF mapping) and root README update. Route: inline (mechanical).
 
 ## Acceptance criteria
 
@@ -60,7 +60,8 @@ Out of scope: deployment, MySQL, external integrations.
 - T3 done (890539a): pytest 28 passed. Update form takes software name; unknown name shows "must be registered first"; update sets current version.
 - T4 done (4ceb489): pytest 44 passed. Validation requires a prior maintenance; "Falla" requires observations and flags equipment "requiere nueva intervención". Salida > stock rejected ("Stock insuficiente"). Part creation/status change admin-only.
 - Parent spot check: `venv/bin/python -m pytest sistema/tests -q`: 44 passed.
-- RDD: assess on 9a603ab..HEAD → risk high (hot paths: auth, update). Review pending.
+- RDD: assess on 9a603ab..HEAD → risk high (hot paths: auth, update). Consent granted; 4-lens review approved and acknowledged (lineage review-29ef608be569ef45, authority burned). 14 non-blocking advisory findings (no CSRF, default creds/secret key, open-redirect backslash, unicode digit quantity crash, DB error page reachability, destructive init-db, readability items) kept as optional follow-ups.
+- T5 done: sistema/README.md + root README; smoke test with admin login: all main pages 200.
 
 Open questions (product):
 - Should technicians be able to register new equipment? (Currently any logged-in user can.)
@@ -68,4 +69,4 @@ Open questions (product):
 
 ## Next step
 
-RDD review of the branch slice, then T5 (docs).
+Feature complete. Optional: hardening follow-ups from advisory findings; merge feat/sistema-mantencion into main (user decision).
