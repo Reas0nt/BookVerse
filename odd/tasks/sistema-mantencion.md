@@ -63,8 +63,10 @@ Out of scope: deployment, MySQL, external integrations.
 - RDD: assess on 9a603ab..HEAD → risk high (hot paths: auth, update). Consent granted; 4-lens review approved and acknowledged (lineage review-29ef608be569ef45, authority burned). 14 non-blocking advisory findings (no CSRF, default creds/secret key, open-redirect backslash, unicode digit quantity crash, DB error page reachability, destructive init-db, readability items) kept as optional follow-ups.
 - T5 done: sistema/README.md + root README; smoke test with admin login: all main pages 200.
 
+- Follow-up (5bdb32e): equipment registration admin-only (user decision, case RF-06 alt flow implies prior registration); RF-06/RF-08 alternate-flow messages aligned with case wording. pytest 45 passed. RDD high: consent granted, 4-lens review approved and acknowledged (review-1558753bddc2985d). Advisory: empty-history message is misleading when filters are applied.
+- Port 5110 documented (71bf809) because port 5000 is used by another service.
+
 Open questions (product):
-- Should technicians be able to register new equipment? (Currently any logged-in user can.)
 - Should software updates be linked to a maintenance record? (Currently standalone.)
 
 ## Next step
