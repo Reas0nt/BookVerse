@@ -18,7 +18,7 @@ pip install -r requirements-dev.txt
 
 ```bash
 flask --app sistema init-db     # creates the database with example data
-flask --app sistema run         # http://127.0.0.1:5000
+flask --app sistema run --port 5110   # http://127.0.0.1:5110
 ```
 
 `init-db` deletes and recreates the database. Run it only the first time or to reset.
