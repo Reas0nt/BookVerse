@@ -102,6 +102,9 @@ def _history_query(args):
     return sql, params, errors
 
 
+HISTORY_FILTERS = ("desde", "hasta", "tipo", "equipo")
+
+
 def _db_error():
     return render_template("mantenimientos/error.html"), 503
 
@@ -118,8 +121,9 @@ def history():
             rows = get_db().execute(sql, params).fetchall()
         except sqlite3.Error:
             return _db_error()
+    filtered = any(request.args.get(name, "").strip() for name in HISTORY_FILTERS)
     return render_template("mantenimientos/history.html", rows=rows, filters=request.args,
-                           types=MAINTENANCE_TYPES)
+                           filtered=filtered, types=MAINTENANCE_TYPES)
 
 
 @bp.route("/<int:maintenance_id>")

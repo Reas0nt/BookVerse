@@ -74,10 +74,19 @@ def test_history_lists_and_filters(client, auth):
     assert "EQ-002" in html and "EQ-001" not in html
 
 
-def test_history_empty_result_message(client, auth):
+def test_history_without_records_shows_case_message(client, auth):
     auth.login_admin()
-    html = client.get("/mantenimientos/?equipo=NOPE").get_data(as_text=True)
+    html = client.get("/mantenimientos/").get_data(as_text=True)
     assert "No hay mantenimientos realizados." in html
+    assert "Ningún mantenimiento coincide" not in html
+
+
+def test_history_filter_without_matches_shows_search_message(client, auth):
+    auth.login_admin()
+    seed_history(client)
+    html = client.get("/mantenimientos/?equipo=NOPE").get_data(as_text=True)
+    assert "Ningún mantenimiento coincide con la búsqueda." in html
+    assert "No hay mantenimientos realizados." not in html
 
 
 def test_history_rejects_invalid_filters(client, auth):
