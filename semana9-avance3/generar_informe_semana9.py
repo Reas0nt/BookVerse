@@ -141,6 +141,8 @@ def table(widths, head, rows, center_cols=(), bold_last=False, row_fill=None):
         for c, text in enumerate(row):
             fill_cell(cells[c], text, widths[c], fill,
                       bold=bold_last and c == len(row) - 1, center=c in center_cols)
+    for row in tbl.rows:  # keep each row on one page
+        row._tr.get_or_add_trPr().append(OxmlElement("w:cantSplit"))
     return tbl
 
 

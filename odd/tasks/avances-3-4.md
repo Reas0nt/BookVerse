@@ -34,7 +34,7 @@ Out of scope: refactoring week 7/8 generators; changing the web system.
 ## Tasks
 
 - [x] T1 Avance 3 (RF-08): Excel history workbook + Word report. Route: delegated writer (writer trigger: 2+ non-trivial files).
-- [ ] T2 Avance 4 (RF-09): Excel inventory workbook (stock via formulas) + Word report. Route: delegated writer.
+- [x] T2 Avance 4 (RF-09): Excel inventory workbook (stock via formulas) + Word report. Route: delegated writer.
 - [ ] T3 README update. Route: same writer (mechanical).
 
 ## Acceptance criteria
@@ -45,8 +45,9 @@ Out of scope: refactoring week 7/8 generators; changing the web system.
 
 ## Progress / Evidence
 
-- T1: both scripts run from `semana9-avance3/`; xlsx renders in LibreOffice with no #NAME?/#VALUE?/#REF! and serial lookup resolves; docx 9 pages, tables checked visually, no leftover brackets; pytest 46 passed. EQ-005 entry dates (15/16-10-2026) are placeholders for the group to confirm.
+- T1: both scripts run from `semana9-avance3/`; xlsx renders in LibreOffice with no #NAME?/#VALUE!/#REF! and serial lookup resolves; docx 9 pages, tables checked visually, no leftover brackets; pytest 46 passed. EQ-005 entry dates (15/16-10-2026) are placeholders for the group to confirm.
+- T2: both scripts run from `semana10-avance4/`; xlsx recalculated in LibreOffice (pdftotext: no #NAME?/#VALUE!/#REF!/Err; Inventario shows 2 Reponer, 0 ERROR; forced oversized salida test shows ERROR); docx 8 pages, tables checked visually; pytest 46 passed.
 
 ## Next step
 
-T2.
+T3.
