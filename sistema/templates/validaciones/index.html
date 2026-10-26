@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Validaciones{% endblock %}
+{% block header %}Validaciones post-mantenimiento{% endblock %}
+{% block content %}
+<p><a class="button" href="{{ url_for('validaciones.create') }}">Registrar validación</a></p>
+{% if flagged %}
+<div class="flash error">Equipos que requieren nueva intervención:
+  {% for e in flagged %}{{ e['code'] }} ({{ e['hostname'] }}){{ ', ' if not loop.last }}{% endfor %}</div>
+{% endif %}
+<table>
+  <thead><tr><th>Equipo</th><th>Mantenimiento</th><th>Resultado</th><th>Observaciones</th><th>Validó</th></tr></thead>
+  <tbody>
+  {% for r in rows %}
+    <tr>
+      <td>{{ r['code'] }} - {{ r['hostname'] }}</td><td>{{ r['performed_on'] }}</td>
+      <td><span class="badge {{ 'warn' if r['result'] == 'Falla' }}">{{ r['result'] }}</span></td>
+      <td>{{ r['observations'] or '-' }}</td><td>{{ r['validator'] }}</td>
+    </tr>
+  {% else %}
+    <tr><td colspan="5">No hay validaciones registradas.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

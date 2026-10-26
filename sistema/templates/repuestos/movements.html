@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Movimientos de repuestos{% endblock %}
+{% block header %}Movimientos de repuestos{% endblock %}
+{% block content %}
+<table>
+  <thead><tr><th>Fecha</th><th>Repuesto</th><th>Movimiento</th><th>Cantidad</th><th>Nota</th><th>Técnico</th></tr></thead>
+  <tbody>
+  {% for r in rows %}
+    <tr>
+      <td>{{ r['moved_on'] }}</td><td>{{ r['part_name'] }}</td><td>{{ r['kind']|capitalize }}</td>
+      <td>{{ r['quantity'] }}</td><td>{{ r['note'] or '-' }}</td><td>{{ r['technician'] }}</td>
+    </tr>
+  {% else %}
+    <tr><td colspan="6">No hay movimientos registrados.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

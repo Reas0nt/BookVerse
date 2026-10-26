@@ -23,6 +23,12 @@ SEED_SOFTWARE = [
     ("Google Chrome", "126.0", "Navegador web"),
 ]
 
+SEED_PARTS = [
+    ("Almacenamiento", "Disco SSD 480 GB", 5, "en buen estado"),
+    ("Memoria", "RAM DDR4 8 GB", 8, "en buen estado"),
+    ("Impresión", "Cartucho de tóner negro", 3, "en buen estado"),
+]
+
 
 def get_db():
     """Return the per-request connection, creating it on first use."""
@@ -57,6 +63,9 @@ def init_db():
     db.executemany(
         "INSERT INTO software (name, current_version, description) VALUES (?, ?, ?)",
         SEED_SOFTWARE,
+    )
+    db.executemany(
+        "INSERT INTO part (type, name, quantity, status) VALUES (?, ?, ?, ?)", SEED_PARTS
     )
     db.commit()
 

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Agregar repuesto{% endblock %}
+{% block header %}Agregar repuesto{% endblock %}
+{% block content %}
+<form method="post" class="card">
+  <label for="type">Tipo</label>
+  <input name="type" id="type" value="{{ values.get('type', '') }}" required>
+  <label for="name">Nombre</label>
+  <input name="name" id="name" value="{{ values.get('name', '') }}" required>
+  <label for="quantity">Cantidad inicial</label>
+  <input name="quantity" id="quantity" inputmode="numeric" value="{{ values.get('quantity', '0') }}">
+  <label for="status">Estado</label>
+  <select name="status" id="status">
+    {% for s in statuses %}<option value="{{ s }}" {{ 'selected' if values.get('status') == s }}>{{ s }}</option>{% endfor %}
+  </select>
+  <button type="submit">Guardar</button>
+  <a href="{{ url_for('repuestos.index') }}">Cancelar</a>
+</form>
+{% endblock %}

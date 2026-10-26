@@ -15,6 +15,8 @@
       <li><a href="{{ url_for('mantenimientos.create') }}">Registrar mantenimiento</a></li>
       <li><a href="{{ url_for('mantenimientos.history') }}">Historial</a></li>
       <li><a href="{{ url_for('software.index') }}">Software</a></li>
+      <li><a href="{{ url_for('repuestos.index') }}">Repuestos</a></li>
+      {% if g.user['role'] == 'administrador' %}<li><a href="{{ url_for('validaciones.index') }}">Validaciones</a></li>{% endif %}
       {% block nav_extra %}{% endblock %}
     </ul>
     <form class="logout" method="post" action="{{ url_for('auth.logout') }}">

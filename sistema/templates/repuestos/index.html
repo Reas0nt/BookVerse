@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Repuestos{% endblock %}
+{% block header %}Inventario de repuestos{% endblock %}
+{% block content %}
+<p>
+  <a class="button" href="{{ url_for('repuestos.movement') }}">Registrar movimiento</a>
+  <a class="button" href="{{ url_for('repuestos.movements') }}">Ver movimientos</a>
+  {% if g.user['role'] == 'administrador' %}<a class="button" href="{{ url_for('repuestos.create') }}">Agregar repuesto</a>{% endif %}
+</p>
+<table>
+  <thead><tr><th>Tipo</th><th>Nombre</th><th>Stock</th><th>Estado</th></tr></thead>
+  <tbody>
+  {% for p in parts %}
+    <tr>
+      <td>{{ p['type'] }}</td><td>{{ p['name'] }}</td><td>{{ p['quantity'] }}</td>
+      <td>
+        {% if g.user['role'] == 'administrador' %}
+        <form method="post" action="{{ url_for('repuestos.set_status', part_id=p['id']) }}">
+          <select name="status">
+            {% for s in statuses %}<option value="{{ s }}" {{ 'selected' if p['status'] == s }}>{{ s }}</option>{% endfor %}
+          </select>
+          <button type="submit">Cambiar</button>
+        </form>
+        {% else %}{{ p['status'] }}{% endif %}
+      </td>
+    </tr>
+  {% else %}
+    <tr><td colspan="4">No hay repuestos registrados.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

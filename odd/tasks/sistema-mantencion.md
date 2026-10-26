@@ -42,7 +42,7 @@ Out of scope: deployment, MySQL, external integrations.
 - [x] T1 Base: app factory, SQLite schema, init-db command with seed users, login/logout, role guard, equipment CRUD (list/create), layout + CSS, tests. Route: delegated writer (writer trigger: 2+ non-trivial files).
 - [x] T2 RF-06 maintenance registration + RF-08 history query (filters, detail, DB error message), tests. Route: delegated writer.
 - [x] T3 RF-07 software catalog + update records, unregistered software message, tests. Route: delegated writer.
-- [ ] T4 RF-09 software validation after maintenance + spare parts inventory (entries/exits/status, non-negative stock), tests. Route: delegated writer.
+- [x] T4 RF-09 software validation after maintenance + spare parts inventory (entries/exits/status, non-negative stock), tests. Route: delegated writer.
 - [ ] T5 Docs: `sistema/README.md` (setup, run, default users, RF mapping) and root README update. Route: inline (mechanical).
 
 ## Acceptance criteria

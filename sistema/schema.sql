@@ -1,3 +1,6 @@
+DROP TABLE IF EXISTS part_movement;
+DROP TABLE IF EXISTS part;
+DROP TABLE IF EXISTS validation;
 DROP TABLE IF EXISTS software_update;
 DROP TABLE IF EXISTS software;
 DROP TABLE IF EXISTS maintenance;
@@ -50,5 +53,35 @@ CREATE TABLE software_update (
     updated_on TEXT NOT NULL,
     method TEXT NOT NULL CHECK (method IN ('manual', 'automatica', 'remota')),
     changes TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE validation (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    equipment_id INTEGER NOT NULL REFERENCES equipment (id),
+    maintenance_id INTEGER NOT NULL REFERENCES maintenance (id),
+    validated_by INTEGER NOT NULL REFERENCES user (id),
+    result TEXT NOT NULL CHECK (result IN ('OK', 'Falla')),
+    observations TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE part (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    type TEXT NOT NULL,
+    name TEXT NOT NULL,
+    quantity INTEGER NOT NULL DEFAULT 0 CHECK (quantity >= 0),
+    status TEXT NOT NULL DEFAULT 'en buen estado'
+        CHECK (status IN ('en buen estado', 'en reparación', 'fuera de servicio'))
+);
+
+CREATE TABLE part_movement (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    part_id INTEGER NOT NULL REFERENCES part (id),
+    technician_id INTEGER NOT NULL REFERENCES user (id),
+    kind TEXT NOT NULL CHECK (kind IN ('ingreso', 'salida')),
+    quantity INTEGER NOT NULL CHECK (quantity > 0),
+    moved_on TEXT NOT NULL,
+    note TEXT NOT NULL DEFAULT '',
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

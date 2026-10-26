@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Registrar validación{% endblock %}
+{% block header %}Validar funcionamiento tras mantenimiento{% endblock %}
+{% block content %}
+<form method="post" class="card">
+  <label for="equipment_id">Equipo</label>
+  <select name="equipment_id" id="equipment_id" required>
+    <option value="">Seleccione...</option>
+    {% for e in equipment %}
+    <option value="{{ e['id'] }}" {{ 'selected' if values.get('equipment_id') == e['id']|string }}>{{ e['code'] }} - {{ e['hostname'] }} ({{ e['status'] }})</option>
+    {% endfor %}
+  </select>
+  <label for="result">Resultado de la prueba</label>
+  <select name="result" id="result">
+    {% for r in results %}<option value="{{ r }}" {{ 'selected' if values.get('result') == r }}>{{ r }}</option>{% endfor %}
+  </select>
+  <label for="observations">Observaciones</label>
+  <textarea name="observations" id="observations" rows="3">{{ values.get('observations', '') }}</textarea>
+  <button type="submit">Guardar</button>
+  <a href="{{ url_for('validaciones.index') }}">Cancelar</a>
+</form>
+{% endblock %}

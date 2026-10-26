@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Movimiento de repuestos{% endblock %}
+{% block header %}Registrar movimiento de repuestos{% endblock %}
+{% block content %}
+<form method="post" class="card">
+  <label for="part_id">Repuesto</label>
+  <select name="part_id" id="part_id" required>
+    <option value="">Seleccione...</option>
+    {% for p in parts %}
+    <option value="{{ p['id'] }}" {{ 'selected' if values.get('part_id') == p['id']|string }}>{{ p['name'] }} (stock {{ p['quantity'] }})</option>
+    {% endfor %}
+  </select>
+  <label for="kind">Movimiento</label>
+  <select name="kind" id="kind">
+    {% for k in kinds %}<option value="{{ k }}" {{ 'selected' if values.get('kind') == k }}>{{ k|capitalize }}</option>{% endfor %}
+  </select>
+  <label for="quantity">Cantidad</label>
+  <input name="quantity" id="quantity" inputmode="numeric" value="{{ values.get('quantity', '') }}" required>
+  <label for="moved_on">Fecha</label>
+  <input type="date" name="moved_on" id="moved_on" value="{{ values.get('moved_on', '') }}" required>
+  <label for="note">Nota</label>
+  <input name="note" id="note" value="{{ values.get('note', '') }}">
+  <button type="submit">Guardar</button>
+  <a href="{{ url_for('repuestos.index') }}">Cancelar</a>
+</form>
+{% endblock %}
