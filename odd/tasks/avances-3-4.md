@@ -49,6 +49,9 @@ Out of scope: refactoring week 7/8 generators; changing the web system.
 - T2: both scripts run from `semana10-avance4/`; xlsx recalculated in LibreOffice (pdftotext: no #NAME?/#VALUE!/#REF!/Err; Inventario shows 2 Reponer, 0 ERROR; forced oversized salida test shows ERROR); docx 8 pages, tables checked visually; pytest 46 passed.
 - T3: README structure rows and regenerate commands added; diff reviewed.
 
+- Follow-up a0d8b3f: real VM dates (install 13-10-2026 per user; KVM fix 20-10-2026 per session evidence), confirm-date notes removed.
+- RDD: assess d34c34e..HEAD medium, slice_budget_reached; consent granted; consolidated review approved and acknowledged. Warning fixed: parts en reparación / fuera de servicio now show "No disponible" instead of counting as available stock (LibreOffice recalc: 2 Reponer, 2 No disponible, 0 ERROR).
+
 ## Next step
 
 User review; merge/push are user decisions.

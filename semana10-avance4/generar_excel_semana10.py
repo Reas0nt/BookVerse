@@ -223,7 +223,7 @@ def main():
             f'=IF($A{r}="","",SUMIFS({mv("E")},{mv("C")},$A{r},{mv("D")},"Salida"))',
             f'=IF($A{r}="","",E{r}-F{r})',
             f'=IF($A{r}="","",{cat}!F{cr})',
-            f'=IF($A{r}="","",IF(G{r}<0,"ERROR: salida mayor al stock",IF(G{r}<=H{r},"Reponer","OK")))',
+            f'=IF($A{r}="","",IF(G{r}<0,"ERROR: salida mayor al stock",IF(D{r}<>"En buen estado","No disponible",IF(G{r}<=H{r},"Reponer","OK"))))',
         ]
         for c, v in enumerate(vals, start=1):
             cell = wv.cell(row=r, column=c, value=v)
@@ -239,6 +239,8 @@ def main():
                                                   fill=PatternFill(start_color="D5F5E3", end_color="D5F5E3", fill_type="solid")))
     wv.conditional_formatting.add(rng, FormulaRule(formula=['I4="Reponer"'], font=Font(bold=True, color="9C5700"),
                                                   fill=PatternFill(start_color="FFEB9C", end_color="FFEB9C", fill_type="solid")))
+    wv.conditional_formatting.add(rng, FormulaRule(formula=['I4="No disponible"'], font=Font(bold=True, color="5D6D7E"),
+                                                  fill=PatternFill(start_color="E5E8E8", end_color="E5E8E8", fill_type="solid")))
     wv.conditional_formatting.add(rng, FormulaRule(formula=['LEFT(I4,5)="ERROR"'], font=Font(bold=True, color="FFFFFF"),
                                                   fill=PatternFill(start_color="C0392B", end_color="C0392B", fill_type="solid")))
     wv.conditional_formatting.add(f"G4:G{inv_last}", CellIsRule(operator="lessThan", formula=["0"],

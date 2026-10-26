@@ -302,9 +302,9 @@ p("La hoja Inventario no contiene valores escritos a mano. Para cada pieza del c
 for t in ["Ingresos: suma de las cantidades de los movimientos de tipo Ingreso de esa pieza (función SUMIFS).",
           "Salidas: suma de las cantidades de los movimientos de tipo Salida de esa pieza (función SUMIFS).",
           "Stock actual: ingresos menos salidas.",
-          "Alerta: ERROR si el stock es negativo, Reponer si el stock es igual o menor al mínimo, y OK en los demás casos."]:
+          "Alerta: ERROR si el stock es negativo; No disponible si la pieza está en reparación o fuera de servicio, porque esas unidades no se pueden usar; Reponer si el stock es igual o menor al mínimo; y OK en los demás casos."]:
     bullet(t)
-p("Como son fórmulas, cada movimiento nuevo actualiza el inventario al instante, y una pieza nueva del catálogo aparece sola en la hoja. Las alertas tienen color: verde para OK, amarillo para Reponer y rojo para ERROR.")
+p("Como son fórmulas, cada movimiento nuevo actualiza el inventario al instante, y una pieza nueva del catálogo aparece sola en la hoja. Las alertas tienen color: verde para OK, amarillo para Reponer, gris para No disponible y rojo para ERROR.")
 h2("4.2 Reglas de consistencia")
 for t in ["Nunca se registra una salida mayor que el stock disponible; si ocurre, la planilla muestra ERROR en el inventario y un stock negativo en el movimiento.",
           "Los movimientos son de solo adición (append-only): no se editan ni se eliminan. Un error se corrige con un movimiento contrario que lo explique.",
