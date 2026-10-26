@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{% endblock %} - BookVerse Mantención</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <nav class="topbar">
+    <a class="brand" href="{{ url_for('index') }}">BookVerse Mantención</a>
+    {% if g.user %}
+    <ul>
+      <li><a href="{{ url_for('equipos.index') }}">Equipos</a></li>
+      {% block nav_extra %}{% endblock %}
+    </ul>
+    <form class="logout" method="post" action="{{ url_for('auth.logout') }}">
+      <span>{{ g.user['full_name'] }} ({{ g.user['role'] }})</span>
+      <button type="submit">Cerrar sesión</button>
+    </form>
+    {% endif %}
+  </nav>
+  <main>
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+    <div class="flash {{ category }}">{{ message }}</div>
+    {% endfor %}
+    <h1>{% block header %}{% endblock %}</h1>
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

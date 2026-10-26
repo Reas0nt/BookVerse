@@ -1,0 +1,25 @@
+:root { --primary: #1f4e79; --bg: #f4f6f8; --border: #d0d7de; --ok: #1a7f37; --err: #b42318; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: #1f2328; }
+.topbar { display: flex; align-items: center; gap: 1.5rem; background: var(--primary); color: #fff; padding: .75rem 1.5rem; flex-wrap: wrap; }
+.topbar a { color: #fff; text-decoration: none; }
+.topbar .brand { font-weight: 700; }
+.topbar ul { display: flex; gap: 1rem; list-style: none; margin: 0; padding: 0; flex: 1; flex-wrap: wrap; }
+.logout { display: flex; align-items: center; gap: .75rem; margin: 0; font-size: .9rem; }
+main { max-width: 960px; margin: 1.5rem auto; padding: 0 1rem; }
+h1 { color: var(--primary); }
+.card { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; max-width: 480px; }
+.card label { display: block; margin-top: .75rem; font-weight: 600; }
+input, select, textarea { width: 100%; padding: .5rem; border: 1px solid var(--border); border-radius: 4px; font: inherit; }
+button, .button { display: inline-block; margin-top: 1rem; padding: .5rem 1rem; background: var(--primary); color: #fff; border: 0; border-radius: 4px; cursor: pointer; text-decoration: none; font: inherit; }
+.logout button { margin: 0; background: #fff; color: var(--primary); }
+table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid var(--border); }
+th, td { padding: .5rem .75rem; text-align: left; border-bottom: 1px solid var(--border); }
+th { background: #eaeef2; }
+.flash { padding: .6rem 1rem; border-radius: 4px; margin-bottom: .75rem; border: 1px solid; }
+.flash.success { background: #dafbe1; border-color: var(--ok); color: var(--ok); }
+.flash.error { background: #ffebe9; border-color: var(--err); color: var(--err); }
+.filters { display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end; margin-bottom: 1rem; }
+.filters div { flex: 1 1 150px; }
+.badge { padding: .1rem .5rem; border-radius: 10px; background: #eaeef2; font-size: .85rem; }
+.badge.warn { background: #fff8c5; }

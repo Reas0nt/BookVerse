@@ -3,3 +3,4 @@ __pycache__/
 .~lock.*#
 *.db
 .pytest_cache/
+instance/

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Equipos{% endblock %}
+{% block header %}Equipos{% endblock %}
+{% block content %}
+<p><a class="button" href="{{ url_for('equipos.create') }}">Registrar equipo</a></p>
+<table>
+  <thead>
+    <tr><th>Código</th><th>Host</th><th>Tipo</th><th>Ubicación</th><th>N° de serie</th><th>Estado</th></tr>
+  </thead>
+  <tbody>
+  {% for e in equipment %}
+    <tr>
+      <td>{{ e['code'] }}</td><td>{{ e['hostname'] }}</td><td>{{ e['type'] }}</td>
+      <td>{{ e['location'] }}</td><td>{{ e['serial_number'] }}</td><td>{{ e['status'] }}</td>
+    </tr>
+  {% else %}
+    <tr><td colspan="6">No hay equipos registrados.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

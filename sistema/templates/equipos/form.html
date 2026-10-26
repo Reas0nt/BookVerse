@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Registrar equipo{% endblock %}
+{% block header %}Registrar equipo{% endblock %}
+{% block content %}
+<form method="post" class="card">
+  <label for="code">Código (EQ-NNN)</label>
+  <input name="code" id="code" value="{{ values.get('code', '') }}" required>
+  <label for="hostname">Nombre de host</label>
+  <input name="hostname" id="hostname" value="{{ values.get('hostname', '') }}" required>
+  <label for="type">Tipo</label>
+  <select name="type" id="type">
+    {% for t in types %}<option value="{{ t }}" {{ 'selected' if values.get('type') == t }}>{{ t }}</option>{% endfor %}
+  </select>
+  <label for="location">Ubicación</label>
+  <input name="location" id="location" value="{{ values.get('location', '') }}" required>
+  <label for="serial_number">Número de serie</label>
+  <input name="serial_number" id="serial_number" value="{{ values.get('serial_number', '') }}" required>
+  <button type="submit">Guardar</button>
+  <a href="{{ url_for('equipos.index') }}">Cancelar</a>
+</form>
+{% endblock %}
