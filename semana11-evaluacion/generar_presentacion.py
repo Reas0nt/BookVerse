@@ -159,15 +159,15 @@ def slide_portada(prs):
     add_text(s, MX, 1.2, 7.0, 2.3, "BookVerse: mantención de equipos de oficina",
              "Titulo", size=44, bold=True, font=HEAD, color=WHITE, anchor=MSO_ANCHOR.TOP)
     add_text(s, MX, 3.7, 6.8, 1.0,
-             "Integración de Competencias II · Etapa II · Evaluación práctica (semana 11)",
+             "Integración de Competencias 2 · Etapa II · Evaluación práctica (semana 11)",
              "Subtitulo", size=20, color="E9D9E1")
     add_text(s, MX, 5.3, 6.8, 1.3,
              [[("Integrantes: ", {"bold": True, "color": AMBER}),
                "Bastián Andrade, María Ojeda, Maikol Ulloa"],
-              [("Docente: ", {"bold": True, "color": AMBER}), "[Nombre docente]"]],
+              [("Docente: ", {"bold": True, "color": AMBER}), "Manuel Merino"]],
              "Integrantes", size=16, color=WHITE, space_after=6)
     set_notes(s, "Buenas tardes. Somos el grupo BookVerse y presentamos la evaluación práctica de "
-                 "la semana 11 de Integración de Competencias II. Resumiremos el trabajo de la "
+                 "la semana 11 de Integración de Competencias 2. Resumiremos el trabajo de la "
                  "Etapa II: planificación, instalación y configuración, y validación.")
 
 
@@ -430,7 +430,7 @@ def slide_vm(prs):
     add_text(s, rx + 0.3, vy + 0.15, rw - 0.6, vh - 0.3,
              [[("Video del proceso de instalación", {"bold": True, "size": 20})],
               [("Duración máxima: 5 minutos", {"color": MUTED})],
-              [("Video: [pegar enlace]", {"bold": True, "color": BERRY, "size": 20})]],
+              [("youtu.be/8b-JuKKoMV4", {"bold": True, "color": BERRY, "size": 20})]],
              "Video enlace", size=16, space_after=6, anchor=MSO_ANCHOR.MIDDLE)
     set_notes(s, "Instalamos Windows 10 IoT Enterprise LTSC 2021 en una máquina virtual de "
                  "VirtualBox con 4 GB de RAM, 2 procesadores y un disco dinámico de 50 GB. "

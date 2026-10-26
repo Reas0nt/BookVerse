@@ -196,13 +196,13 @@ add_page_number_footer("BookVerse - RF-07 - Avance #2 - Página ")
 
 # ---------- Cover ----------
 
-centered("Integración de Competencias II", 16, bold=True, color=COLOR_TITLE, before=90, after=10)
+centered("Integración de Competencias 2", 16, bold=True, color=COLOR_TITLE, before=90, after=10)
 centered("Actividad 2.3: Avance #2 (semana 8)", 14, color=COLOR_TITLE, after=30)
 centered("Informe de avance RF-07", 22, bold=True, color=COLOR_HEADER, after=10)
 centered("Actualización y registro de software en equipos de oficina - Proyecto BookVerse", 13, after=60)
 table([3000, 6026], ["Dato", "Detalle"], [
     ["Integrantes", ", ".join(MEMBERS)],
-    ["Docente", "[Nombre docente]"],
+    ["Docente", "Manuel Merino"],
     ["Fecha", "Semana 8, octubre 2026"],
     ["Requerimiento", "RF-07: actualización y registro de software"],
     ["Archivo complementario", "Registro_Software_RF07_Semana8.xlsx"],
@@ -390,7 +390,7 @@ table([1500, 5526, 2000], ["Tiempo", "Contenido", "Responsable"], [
     ["4:00 - 5:00", "Registro de la versión en el Excel y cierre", "[Integrante]"],
 ])
 p()
-p("Enlace al video: [pegar enlace]", bold=True)
+p("Enlace al video: https://youtu.be/8b-JuKKoMV4", bold=True)
 
 # ---------- 6. Teacher review ----------
 
