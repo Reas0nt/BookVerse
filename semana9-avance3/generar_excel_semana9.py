@@ -24,7 +24,7 @@ DATE_FMT = "DD-MM-YYYY"
 BLANK_ROWS = 40  # empty formatted rows available after the examples
 EQUIPOS_BLANK = 15
 BANNER = ("EJEMPLO - filas amarillas: datos de muestra, reemplazar con datos reales del laboratorio. "
-          "Filas verdes: registros reales del equipo EQ-005 (confirmar fecha).")
+          "Filas verdes: registros reales del equipo EQ-005.")
 
 d = lambda day, month: dt.date(2026, month, day)
 
@@ -62,8 +62,8 @@ HISTORIAL = (
         ["HM-006", d(12, 10), "EQ-002", None, "Preventivo", "Limpieza", "Limpieza de teclado, pantalla y ventilación.", "Ninguno", "Resuelto", "María Ojeda", "Bastián Andrade"],
         ["HM-007", d(13, 10), "EQ-003", None, "Correctivo", "Hardware", "Fuente de poder con ruido anormal; se diagnosticó el reemplazo y se espera disponibilidad del repuesto.", "Ninguno (a la espera de repuesto)", "Pendiente", "Maikol Ulloa", "Pendiente"],
         ["HM-008", d(14, 10), "EQ-004", None, "Correctivo", "Software", "Error de activación de Microsoft 365 Apps; se deriva al proveedor de licencias.", "Ninguno", "Derivado", "María Ojeda", "Bastián Andrade"],
-        ["HM-009", d(15, 10), "EQ-005", None, "Preventivo", "Configuración", "REAL: instalación y configuración inicial de Windows 10 IoT Enterprise LTSC 2021 (21H2, compilación 19044) en una máquina virtual VirtualBox (Avance 2, semana 8).", "Ninguno", "Resuelto", "Grupo BookVerse", "Grupo BookVerse"],
-        ["HM-010", d(16, 10), "EQ-005", None, "Correctivo", "Configuración", "REAL: la máquina virtual no iniciaba (VERR_VMX_IN_VMX_ROOT_MODE) porque el módulo KVM del anfitrión retenía VT-x. Se descargaron kvm_intel y kvm (modprobe -r) y se fijó kvm.enable_virt_at_load=0 de forma permanente.", "Ninguno", "Resuelto", "Grupo BookVerse", "Grupo BookVerse"],
+        ["HM-009", d(13, 10), "EQ-005", None, "Preventivo", "Configuración", "REAL: instalación y configuración inicial de Windows 10 IoT Enterprise LTSC 2021 (21H2, compilación 19044) en una máquina virtual VirtualBox (Avance 2, semana 8).", "Ninguno", "Resuelto", "Grupo BookVerse", "Grupo BookVerse"],
+        ["HM-010", d(20, 10), "EQ-005", None, "Correctivo", "Configuración", "REAL: la máquina virtual no iniciaba (VERR_VMX_IN_VMX_ROOT_MODE) porque el módulo KVM del anfitrión retenía VT-x. Se descargaron kvm_intel y kvm (modprobe -r) y se fijó kvm.enable_virt_at_load=0 de forma permanente.", "Ninguno", "Resuelto", "Grupo BookVerse", "Grupo BookVerse"],
     ],
     [11, 13, 11, 20, 13, 15, 60, 30, 16, 20, 18],
     {8, 9},

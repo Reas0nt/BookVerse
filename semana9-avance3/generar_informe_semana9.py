@@ -330,11 +330,10 @@ p()
 h2("5.2 Registros reales del equipo EQ-005")
 p("El equipo EQ-005 (WIN10-BOOKVERSE) es la máquina virtual VirtualBox con Windows 10 IoT Enterprise LTSC 2021 (versión 21H2, compilación 19044) creada por el grupo en el Avance 2. Sus dos entradas son reales:")
 table([1000, 1300, 3126, 2200, 1400], ["ID", "Fecha", "Intervención", "Solución", "Resultado"], [
-    ["HM-009", "15-10-2026", "Instalación y configuración inicial de Windows 10 IoT Enterprise LTSC 2021 en VirtualBox.", "Instalación guiada según el informe del Avance 2.", "Resuelto"],
-    ["HM-010", "16-10-2026", "La máquina virtual no iniciaba (VERR_VMX_IN_VMX_ROOT_MODE) porque el módulo KVM del anfitrión retenía VT-x.", "Se descargaron kvm_intel y kvm y se fijó kvm.enable_virt_at_load=0.", "Resuelto"],
+    ["HM-009", "13-10-2026", "Instalación y configuración inicial de Windows 10 IoT Enterprise LTSC 2021 en VirtualBox.", "Instalación guiada según el informe del Avance 2.", "Resuelto"],
+    ["HM-010", "20-10-2026", "La máquina virtual no iniciaba (VERR_VMX_IN_VMX_ROOT_MODE) porque el módulo KVM del anfitrión retenía VT-x.", "Se descargaron kvm_intel y kvm y se fijó kvm.enable_virt_at_load=0.", "Resuelto"],
 ])
 p()
-note("Las fechas de HM-009 y HM-010 son referenciales y deben ser confirmadas por el grupo antes de la entrega.")
 
 # ---------- 6. Quality control ----------
 
@@ -383,7 +382,7 @@ p("Nos gustaría reforzar el diseño de consultas eficientes sobre bases de dato
 
 h1("9. Conclusión")
 p("Se organizaron los requisitos de RF-08, se definieron ocho criterios de búsqueda y dos vías de acceso al historial, y se documentó un formato uniforme que incluye la fecha, el tipo y los detalles de cada intervención. La planilla y el sistema web ofrecen la misma información, y los controles de calidad aseguran que los datos sean completos y verificables.")
-p("Como siguientes pasos, el grupo debe reemplazar los datos de ejemplo por los mantenimientos reales del laboratorio, confirmar las fechas de las entradas del equipo EQ-005 y revisar el historial junto al docente.")
+p("Como siguientes pasos, el grupo debe reemplazar los datos de ejemplo por los mantenimientos reales del laboratorio y revisar el historial junto al docente.")
 
 doc.save(OUTPUT)
 print(f"[ÉXITO] Archivo '{OUTPUT}' generado correctamente.")
