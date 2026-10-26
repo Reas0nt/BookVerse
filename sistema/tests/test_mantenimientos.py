@@ -42,7 +42,7 @@ def test_register_rejects_future_date_and_unknown_equipment(client, auth):
     html = add_maintenance(client, performed_on="2999-01-01").get_data(as_text=True)
     assert "no puede ser futura" in html
     html = add_maintenance(client, equipment_id=999).get_data(as_text=True)
-    assert "El equipo seleccionado no existe" in html
+    assert "El equipo no está registrado. Debe registrarse primero." in html
 
 
 def seed_history(client):
@@ -77,7 +77,7 @@ def test_history_lists_and_filters(client, auth):
 def test_history_empty_result_message(client, auth):
     auth.login_admin()
     html = client.get("/mantenimientos/?equipo=NOPE").get_data(as_text=True)
-    assert "No se encontraron registros" in html
+    assert "No hay mantenimientos realizados." in html
 
 
 def test_history_rejects_invalid_filters(client, auth):

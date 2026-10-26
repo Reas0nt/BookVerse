@@ -48,7 +48,7 @@ def create():
         values, errors = _validate(request.form)
         if not errors and db.execute(
                 "SELECT 1 FROM equipment WHERE id = ?", (values["equipment_id"],)).fetchone() is None:
-            errors.append("El equipo seleccionado no existe.")
+            errors.append("El equipo no está registrado. Debe registrarse primero.")
         if not errors:
             db.execute(
                 "INSERT INTO maintenance (equipment_id, technician_id, type, performed_on,"

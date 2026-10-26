@@ -42,7 +42,7 @@ def test_equipment_list_shows_seed_data(client, auth):
 
 
 def test_create_equipment(client, auth, app):
-    auth.login_tecnico()
+    auth.login_admin()
     response = client.post("/equipos/nuevo", data={
         "code": "EQ-010", "hostname": "BV-TEST", "type": "PC",
         "location": "Oficina", "serial_number": "SN-X"}, follow_redirects=True)
@@ -52,7 +52,7 @@ def test_create_equipment(client, auth, app):
 
 
 def test_create_equipment_rejects_duplicate_code(client, auth):
-    auth.login_tecnico()
+    auth.login_admin()
     response = client.post("/equipos/nuevo", data={
         "code": "EQ-001", "hostname": "X", "type": "PC",
         "location": "Y", "serial_number": "Z"})
@@ -60,7 +60,7 @@ def test_create_equipment_rejects_duplicate_code(client, auth):
 
 
 def test_create_equipment_validates_input(client, auth):
-    auth.login_tecnico()
+    auth.login_admin()
     response = client.post("/equipos/nuevo", data={
         "code": "ABC", "hostname": "", "type": "Toaster",
         "location": "Y", "serial_number": "Z"})
@@ -68,3 +68,15 @@ def test_create_equipment_validates_input(client, auth):
     assert "formato EQ-NNN" in html
     assert "Nombre de host es obligatorio" in html
     assert "Tipo de equipo no válido" in html
+
+
+def test_technician_cannot_register_equipment(client, auth, app):
+    auth.login_tecnico()
+    assert client.get("/equipos/nuevo").status_code == 403
+    response = client.post("/equipos/nuevo", data={
+        "code": "EQ-011", "hostname": "BV-T", "type": "PC",
+        "location": "Oficina", "serial_number": "SN-Y"})
+    assert response.status_code == 403
+    assert "Registrar equipo" not in client.get("/equipos/").get_data(as_text=True)
+    with app.app_context():
+        assert get_db().execute("SELECT 1 FROM equipment WHERE code = 'EQ-011'").fetchone() is None

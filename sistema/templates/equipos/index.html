@@ -2,7 +2,7 @@
 {% block title %}Equipos{% endblock %}
 {% block header %}Equipos{% endblock %}
 {% block content %}
-<p><a class="button" href="{{ url_for('equipos.create') }}">Registrar equipo</a></p>
+{% if g.user['role'] == 'administrador' %}<p><a class="button" href="{{ url_for('equipos.create') }}">Registrar equipo</a></p>{% endif %}
 <table>
   <thead>
     <tr><th>Código</th><th>Host</th><th>Tipo</th><th>Ubicación</th><th>N° de serie</th><th>Estado</th></tr>

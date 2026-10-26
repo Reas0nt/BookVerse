@@ -23,7 +23,7 @@
       <td><a href="{{ url_for('mantenimientos.detail', maintenance_id=r['id']) }}">Ver detalle</a></td>
     </tr>
   {% else %}
-    <tr><td colspan="5">No se encontraron registros.</td></tr>
+    <tr><td colspan="5">No hay mantenimientos realizados.</td></tr>
   {% endfor %}
   </tbody>
 </table>

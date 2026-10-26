@@ -3,7 +3,7 @@ import sqlite3
 
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
-from .auth import login_required
+from .auth import admin_required, login_required
 from .db import get_db
 
 bp = Blueprint("equipos", __name__, url_prefix="/equipos")
@@ -36,7 +36,7 @@ def _validate(form):
 
 
 @bp.route("/nuevo", methods=("GET", "POST"))
-@login_required
+@admin_required
 def create():
     values = {}
     if request.method == "POST":

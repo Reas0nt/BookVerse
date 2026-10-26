@@ -44,7 +44,7 @@ These are demo credentials. Change them, and set the `SECRET_KEY` environment va
 | RF-09 (case) | `/validaciones/` | Validate software after maintenance; a failure flags the equipment for a new intervention |
 | RF-09 (week 10 guideline) | `/repuestos/` | Spare parts with status, stock entries and exits; exits larger than stock are rejected |
 
-Admin-only: software catalog, validations, creating parts and changing part status.
+Admin-only: equipment registration, software catalog, validations, creating parts and changing part status. Technicians register maintenance, software updates and part movements.
 
 ## Tests
 
