@@ -40,4 +40,12 @@ cd semana10-avance4 && python generar_excel_semana10.py && python generar_inform
 python semana11-evaluacion/generar_presentacion.py   # diagrams/screenshots are pre-rendered; regenerating them needs internet (kroki.io) and Firefox
 ```
 
+## Package the deliverables
+
+```bash
+python empaquetar_entregables.py
+```
+
+Builds `entregables/` (not tracked by git) with every deliverable ordered by week, a PDF copy of each Word/PowerPoint file (needs LibreOffice), the Excalidraw diagrams, the video link and a zip of the web system.
+
 Edit the data inside the script, then regenerate. Manual edits made directly in the `.docx` or `.xlsx` files are lost the next time the script runs.
