@@ -56,7 +56,7 @@ Tecnico --> Panel : consulta y\nreconoce alertas
 
 note bottom of Monitor
   Ruta alterna: el heartbeat vencido marca el sensor como SIN_DATOS.
-  Excepcion: si falla la conexión, se genera la advertencia
+  Excepción: si falla la conexión, se genera la advertencia
   SIN_CONEXION y se muestra en el panel.
 end note
 @enduml

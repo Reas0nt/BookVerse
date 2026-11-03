@@ -150,7 +150,7 @@ TecnicoMantenimiento "1..*" --> "1..*" Sucursal : monitorea
 note bottom of MonitorService
   Flujo alterno: verificarSensoresInactivos()
   marca SIN_DATOS si ultimaLectura supera el timeout.
-  Excepcion: detectarPerdidaConexion()
+  Excepción: detectarPerdidaConexion()
   genera Alerta SIN_CONEXION.
 end note
 @enduml

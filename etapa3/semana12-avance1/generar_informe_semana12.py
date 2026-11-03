@@ -1,6 +1,7 @@
 """Generate the RF-10 progress report (Etapa 3, Avance #1, week 12) as a Word document."""
 
 from docx import Document
+from docx.enum.section import WD_ORIENT, WD_SECTION
 from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK
 from docx.oxml import OxmlElement
@@ -158,6 +159,14 @@ def picture(path, caption, width_cm=15):
     add_run(cap, caption, italic=True, size=9)
 
 
+def new_section(landscape):
+    """Start a new page section in landscape or portrait (footer is inherited)."""
+    sec = doc.add_section(WD_SECTION.NEW_PAGE)
+    sec.orientation = WD_ORIENT.LANDSCAPE if landscape else WD_ORIENT.PORTRAIT
+    sec.page_width, sec.page_height = (Cm(29.7), Cm(21)) if landscape else (Cm(21), Cm(29.7))
+    return sec
+
+
 def page_break():
     doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
 
@@ -278,9 +287,11 @@ p()
 
 # ---------- 4. Class diagram ----------
 
+new_section(landscape=True)
 h1("4. Diagrama de clases")
-p("El diagrama representa los elementos clave del monitoreo de información. Está escrito en PlantUML (archivo diagramas/clases_rf10.puml) y orientado al prototipo web.")
-picture(DIAGRAM_CLASSES, "Figura 1. Diagrama de clases UML del monitoreo de sensores (RF-10).", width_cm=16)
+p("El diagrama representa los elementos clave del monitoreo de información. Está escrito en PlantUML (archivo diagramas/clases_rf10.puml, versión en alta resolución en diagramas/clases_rf10.png) y orientado al prototipo web.")
+picture(DIAGRAM_CLASSES, "Figura 1. Diagrama de clases UML del monitoreo de sensores (RF-10).", width_cm=21)
+new_section(landscape=False)
 h2("4.1 Clases y enumeraciones")
 table([2400, 6626], ["Clase", "Responsabilidad"], [
     ["Sucursal", "Local de BookVerse donde se instalan los sensores; agrupa sensores y umbrales."],
@@ -313,7 +324,7 @@ for parts in [
 
 h1("5. Diagrama de arquitectura de alto nivel")
 p("El diagrama (archivo diagramas/arquitectura_rf10.puml) muestra los componentes esenciales, cómo se conectan y los protocolos utilizados.")
-picture(DIAGRAM_ARCHITECTURE, "Figura 2. Arquitectura de alto nivel del monitoreo de sensores (RF-10).", width_cm=15)
+picture(DIAGRAM_ARCHITECTURE, "Figura 2. Arquitectura de alto nivel del monitoreo de sensores (RF-10).", width_cm=16)
 h2("5.1 Componentes")
 table([2600, 6426], ["Componente", "Función"], [
     ["Nodo ESP32 con DHT22 y sensor IR/ToF", "Mide temperatura, humedad y paso de personas; el firmware publica las lecturas y un heartbeat periódico."],
@@ -343,6 +354,7 @@ p()
 
 # ---------- 6. Verification ----------
 
+page_break()
 h1("6. Verificación del diseño")
 p("Se comprobó que cada paso del requerimiento RF-10 está cubierto por al menos una clase y un componente.")
 table([2300, 2300, 2200, 2226], ["Elemento de RF-10", "Cómo se cubre", "Clases", "Componentes"], [

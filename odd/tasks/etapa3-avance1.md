@@ -41,3 +41,6 @@ Mode: off (no project TDD config; generators have no test suite). Checks: run th
 
 ## Next step
 Share diagrams with teacher; open PR when user decides.
+
+## Parent review
+- Class diagram moved to a landscape page (was unreadable at portrait width), architecture width 16 cm, page break before verification table, accent fix in .puml notes. Report now 10 pages.
