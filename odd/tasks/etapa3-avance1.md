@@ -24,7 +24,7 @@ The course guideline (`etapa3/docs/Pauta_Avance1_Semana12.docx`) asks the group 
 Mode: off (no project TDD config; generators have no test suite). Checks: run the generators, verify outputs exist and open; existing `pytest` stays green.
 
 ## Tasks
-- [x] T1 (commit pending-T1) Diagrams: class + architecture PlantUML sources and `generar_diagramas.py` rendering PNGs. Route: delegated (writer trigger, 2+ non-trivial files).
+- [x] T1 (commit 3aed472) Diagrams: class + architecture PlantUML sources and `generar_diagramas.py` rendering PNGs. Route: delegated (writer trigger, 2+ non-trivial files).
 - [ ] T2 Report: `generar_informe_semana12.py` -> `Informe_Avance1_RF10_Semana12.docx` (requirement analysis, both diagrams with explanation, flow traceability/verification, closing questions). Route: delegated (same writer).
 - [ ] T3 Packaging + docs: add S12 to `empaquetar_entregables.py`, update `etapa3/README.md`. Route: delegated (same writer).
 
