@@ -1,4 +1,4 @@
-"""Collect every Stage 2 deliverable into one folder, ordered by week.
+"""Collect every Stage 2 and Stage 3 deliverable into one folder, ordered by week.
 
 Usage (from the repo root): venv/bin/python empaquetar_entregables.py
 
@@ -34,6 +34,13 @@ DELIVERABLES = [
     ]),
     ("S11_Evaluacion_Practica", [
         "semana11-evaluacion/Presentacion_Evaluacion_S11_BookVerse.pptx",
+    ]),
+    ("S12_Etapa3_Avance1_RF10_Monitoreo", [
+        "etapa3/semana12-avance1/Informe_Avance1_RF10_Semana12.docx",
+        "etapa3/semana12-avance1/diagramas/clases_rf10.png",
+        "etapa3/semana12-avance1/diagramas/clases_rf10.puml",
+        "etapa3/semana12-avance1/diagramas/arquitectura_rf10.png",
+        "etapa3/semana12-avance1/diagramas/arquitectura_rf10.puml",
     ]),
 ]
 

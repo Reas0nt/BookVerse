@@ -26,7 +26,7 @@ Mode: off (no project TDD config; generators have no test suite). Checks: run th
 ## Tasks
 - [x] T1 (commit 3aed472) Diagrams: class + architecture PlantUML sources and `generar_diagramas.py` rendering PNGs. Route: delegated (writer trigger, 2+ non-trivial files).
 - [x] T2 (commit 742a28f) Report: `generar_informe_semana12.py` -> `Informe_Avance1_RF10_Semana12.docx` (requirement analysis, both diagrams with explanation, flow traceability/verification, closing questions). Route: delegated (same writer).
-- [ ] T3 Packaging + docs: add S12 to `empaquetar_entregables.py`, update `etapa3/README.md`. Route: delegated (same writer).
+- [x] T3 (commit see git log: chore: package etapa 3 avance 1 deliverables) Packaging + docs: add S12 to `empaquetar_entregables.py`, update `etapa3/README.md`. Route: delegated (same writer).
 
 ## Acceptance criteria
 - Class diagram covers branch, sensors (temperature, humidity, people counter), readings, thresholds, alerts, monitoring service, dashboard, technician; alternate flow (sensor stops sending) and exception (connection lost) are modeled.
@@ -35,8 +35,9 @@ Mode: off (no project TDD config; generators have no test suite). Checks: run th
 
 ## Progress
 - Branch `feat/etapa3-avance1` created.
+- T3 done: S12 added to packaging, README regenerate section; packaging OK, pytest 46 passed.
 - T2 done: report script + docx generated.
 - T1 done: puml sources, PNGs rendered via kroki, generator script.
 
 ## Next step
-T3.
+Share diagrams with teacher; open PR when user decides.

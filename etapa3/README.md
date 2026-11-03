@@ -33,3 +33,20 @@ Confirm each one when its guideline is published.
 | CEMN2 Employability | 15% | Induction matrix: lifelong learning and innovation |
 
 Each criterion scores 7 (Sobresaliente), 6 (Destacado), 5 (Competente) or 0 (Insuficiente).
+
+## Regenerate
+
+Run from the repository root with the project virtualenv. Diagram rendering needs internet access (kroki.io).
+
+```bash
+# Avance #1 (week 12): render the PlantUML diagrams, then build the Word report
+cd etapa3/semana12-avance1
+../../venv/bin/python generar_diagramas.py
+../../venv/bin/python generar_informe_semana12.py
+cd ../..
+
+# Package every deliverable (Stage 2 and Stage 3) into entregables/ and entregables.zip
+venv/bin/python empaquetar_entregables.py
+```
+
+PDF copies of the Word files are created when LibreOffice (`soffice`) is installed.
