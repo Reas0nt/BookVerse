@@ -44,3 +44,10 @@ Share diagrams with teacher; open PR when user decides.
 
 ## Parent review
 - Class diagram moved to a landscape page (was unreadable at portrait width), architecture width 16 cm, page break before verification table, accent fix in .puml notes. Report now 10 pages.
+
+## Review
+- RDD high risk (process boundary in empaquetar_entregables.py); user granted review. 4 lenses, approved, acknowledged (lineage review-18c7424cfdfa01e3, base main..3f55ed4).
+- Advisory (non-blocking): report script uses cwd-relative paths (same as stage 2 convention), unused helper/table params, timeout responsibility shown in both "Vigilante de heartbeat" and monitoring service, unused enum value, diagram script keeps stale PNG on partial failure.
+
+## Status
+Done. Pending for the group: rewrite closing-question drafts, confirm cover date, share diagrams with the teacher.
