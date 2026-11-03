@@ -1,8 +1,13 @@
-# BookVerse - Integración de Competencias II (Etapa 2)
+# BookVerse - Integración de Competencias II
 
-Deliverables for the BookVerse case, stage 2: office equipment maintenance (RF-06 to RF-09).
+Deliverables for the BookVerse case.
 
-## Structure
+| Stage | Topic | Location |
+|---|---|---|
+| Etapa 2 (finished) | Office equipment maintenance, RF-06 to RF-09 | Repository root (folders below) |
+| Etapa 3 (in progress) | Emerging technologies: IoT sensors, RF-10 to RF-13 | [`etapa3/`](etapa3/README.md) |
+
+## Etapa 2 structure
 
 | Folder | Content |
 |---|---|
