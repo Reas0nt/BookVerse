@@ -1,0 +1,156 @@
+@startuml clases_rf10
+title RF-10 Monitoreo de sensores ambientales - Diagrama de clases
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam linetype ortho
+skinparam class {
+  BackgroundColor #FDFEFE
+  BorderColor #34495E
+  ArrowColor #34495E
+}
+hide empty members
+
+enum TipoSensor {
+  TEMPERATURA
+  HUMEDAD
+  CONTEO_PERSONAS
+}
+
+enum EstadoSensor {
+  ACTIVO
+  SIN_DATOS
+  DESCONECTADO
+}
+
+enum TipoAlerta {
+  FUERA_DE_RANGO
+  SENSOR_SIN_DATOS
+  SIN_CONEXION
+}
+
+enum Severidad {
+  INFORMATIVA
+  ADVERTENCIA
+  CRITICA
+}
+
+enum EstadoAlerta {
+  ACTIVA
+  RECONOCIDA
+  RESUELTA
+}
+
+class Sucursal {
+  - id: int
+  - nombre: String
+  - direccion: String
+  + obtenerSensores(): List<Sensor>
+}
+
+abstract class Sensor {
+  - id: String
+  - tipo: TipoSensor
+  - ubicacion: String
+  - estado: EstadoSensor
+  - ultimaLectura: DateTime
+  + registrarLectura(valor: double): Lectura
+  + estaInactivo(timeoutSeg: int): boolean
+}
+
+class SensorTemperatura {
+  - unidad: String = "°C"
+}
+
+class SensorHumedad {
+  - unidad: String = "%HR"
+}
+
+class SensorConteoPersonas {
+  - unidad: String = "personas"
+  - sentido: String
+}
+
+class Lectura {
+  - valor: double
+  - unidad: String
+  - fechaHora: DateTime
+}
+
+class Umbral {
+  - tipoSensor: TipoSensor
+  - minimo: double
+  - maximo: double
+  + estaFueraDeRango(valor: double): boolean
+}
+
+class Alerta {
+  - tipo: TipoAlerta
+  - severidad: Severidad
+  - estado: EstadoAlerta
+  - mensaje: String
+  - fechaHora: DateTime
+  + reconocer(): void
+  + resolver(): void
+}
+
+class MonitorService {
+  - timeoutSinDatosSeg: int
+  + recibirLectura(sensorId: String, valor: double): Lectura
+  + verificarSensoresInactivos(): List<Alerta>
+  + detectarPerdidaConexion(): Alerta
+  + obtenerUltimosValores(sucursalId: int): List<Lectura>
+}
+
+interface LecturaRepository {
+  + guardar(lectura: Lectura): void
+  + consultarPorSensor(sensorId: String, desde: DateTime, hasta: DateTime): List<Lectura>
+}
+
+class LecturaMySQLRepository {
+  - conexion: Connection
+}
+
+class PanelMonitoreo {
+  + actualizarValores(lecturas: List<Lectura>): void
+  + mostrarAdvertencia(alerta: Alerta): void
+}
+
+class TecnicoMantenimiento {
+  - id: int
+  - nombre: String
+  + consultarPanel(): void
+  + reconocerAlerta(alerta: Alerta): void
+}
+
+Sensor <|-- SensorTemperatura
+Sensor <|-- SensorHumedad
+Sensor <|-- SensorConteoPersonas
+
+Sucursal "1" *-- "1..*" Sensor : instala >
+Sensor "1" o-- "0..*" Lectura : genera >
+Sensor "1" --> "1" TipoSensor
+Sensor "1" --> "1" EstadoSensor
+Sucursal "1" o-- "0..*" Umbral : configura >
+
+MonitorService ..> Sensor : supervisa
+MonitorService ..> Umbral : compara con
+MonitorService "1" --> "0..*" Alerta : genera >
+MonitorService --> LecturaRepository : guarda lecturas
+LecturaRepository <|.. LecturaMySQLRepository
+Alerta "0..*" --> "0..1" Sensor : origen
+Alerta --> TipoAlerta
+Alerta --> Severidad
+Alerta --> EstadoAlerta
+
+PanelMonitoreo ..> MonitorService : consulta / SSE
+PanelMonitoreo ..> Alerta : muestra
+TecnicoMantenimiento "1..*" --> "1" PanelMonitoreo : usa
+TecnicoMantenimiento "1..*" --> "1..*" Sucursal : monitorea
+
+note bottom of MonitorService
+  Flujo alterno: verificarSensoresInactivos()
+  marca SIN_DATOS si ultimaLectura supera el timeout.
+  Excepcion: detectarPerdidaConexion()
+  genera Alerta SIN_CONEXION.
+end note
+@enduml
