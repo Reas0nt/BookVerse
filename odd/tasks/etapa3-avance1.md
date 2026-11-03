@@ -25,7 +25,7 @@ Mode: off (no project TDD config; generators have no test suite). Checks: run th
 
 ## Tasks
 - [x] T1 (commit 3aed472) Diagrams: class + architecture PlantUML sources and `generar_diagramas.py` rendering PNGs. Route: delegated (writer trigger, 2+ non-trivial files).
-- [x] T2 (commit pending-T2) Report: `generar_informe_semana12.py` -> `Informe_Avance1_RF10_Semana12.docx` (requirement analysis, both diagrams with explanation, flow traceability/verification, closing questions). Route: delegated (same writer).
+- [x] T2 (commit 742a28f) Report: `generar_informe_semana12.py` -> `Informe_Avance1_RF10_Semana12.docx` (requirement analysis, both diagrams with explanation, flow traceability/verification, closing questions). Route: delegated (same writer).
 - [ ] T3 Packaging + docs: add S12 to `empaquetar_entregables.py`, update `etapa3/README.md`. Route: delegated (same writer).
 
 ## Acceptance criteria
