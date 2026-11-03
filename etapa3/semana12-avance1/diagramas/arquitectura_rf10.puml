@@ -1,59 +1,27 @@
 @startuml arquitectura_rf10
-title RF-10 Monitoreo de sensores ambientales - Arquitectura de alto nivel
+title RF-10 Monitoreo de sensores - Arquitectura de alto nivel
+left to right direction
 skinparam shadowing false
 skinparam componentStyle rectangle
 skinparam defaultFontName Arial
 skinparam ArrowColor #34495E
-skinparam node {
-  BackgroundColor #ECF0F1
-  BorderColor #34495E
-}
-skinparam component {
+skinparam rectangle {
   BackgroundColor #FDFEFE
   BorderColor #34495E
 }
 
 actor "Técnico de\nmantenimiento" as Tecnico
 
-node "Capa Sucursal" as Sucursal {
-  node "Nodo ESP32 (Wi-Fi)" as ESP {
-    component "Sensor DHT22\n(temperatura y humedad)" as DHT
-    component "Sensor IR/ToF\n(conteo de personas)" as IR
-    component "Firmware\n(publica lecturas y heartbeat)" as FW
-  }
-}
+rectangle "Sensores en sucursal\n(ESP32 + DHT22 + contador)" as Sensores
+rectangle "Broker MQTT\n(Mosquitto)" as Broker
+rectangle "Backend Flask\n(recibe, evalúa, alerta)" as Backend
+database "MySQL" as DB
+rectangle "Panel web\n(navegador)" as Panel
 
-node "Servidor BookVerse" as Server {
-  component "Broker MQTT\n(Mosquitto)" as Broker
-  node "Backend Flask" as Backend {
-    component "Ingesta\n(suscriptor MQTT)" as Ingesta
-    component "Servicio de monitoreo y alertas\n(umbrales, timeout de heartbeat, conexión)" as Monitor
-    component "API REST" as API
-    component "Stream SSE\n(tiempo real)" as SSE
-  }
-  database "MySQL\n(lecturas, sensores,\numbrales, alertas)" as DB
-}
+Sensores --> Broker : MQTT
+Broker --> Backend : MQTT
+Backend --> DB : SQL
+Backend --> Panel : SSE / HTTP
+Tecnico --> Panel
 
-node "Navegador del técnico" as Browser {
-  component "Panel web de monitoreo\n(valores y advertencias)" as Panel
-}
-
-DHT --> FW : lectura I2C/GPIO
-IR --> FW : lectura GPIO
-FW --> Broker : MQTT\nlecturas + heartbeat\n(Wi-Fi)
-Broker --> Ingesta : MQTT (suscripción)
-Ingesta --> Monitor : lectura validada\n+ marca de último dato
-Monitor --> DB : SQL\nINSERT lecturas / alertas
-API --> DB : SQL SELECT
-Monitor --> SSE : valores y alertas nuevos
-SSE --> Panel : SSE (HTTP)\nactualización en vivo
-Panel --> API : HTTP/REST\nhistorial y estado
-Tecnico --> Panel : consulta y\nreconoce alertas
-
-note bottom of Monitor
-  Flujo alterno: si un sensor supera el timeout de heartbeat,
-  el servicio lo marca SIN_DATOS y genera la alerta SENSOR_SIN_DATOS.
-  Excepción: si falla la conexión, se genera la advertencia
-  SIN_CONEXION y se muestra en el panel.
-end note
 @enduml

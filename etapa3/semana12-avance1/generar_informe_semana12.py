@@ -3,7 +3,6 @@
 from pathlib import Path
 
 from docx import Document
-from docx.enum.section import WD_ORIENT, WD_SECTION
 from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK
 from docx.oxml import OxmlElement
@@ -155,14 +154,6 @@ def picture(path, caption, width_cm=15):
     add_run(cap, caption, italic=True, size=9)
 
 
-def new_section(landscape):
-    """Start a new page section in landscape or portrait (footer is inherited)."""
-    sec = doc.add_section(WD_SECTION.NEW_PAGE)
-    sec.orientation = WD_ORIENT.LANDSCAPE if landscape else WD_ORIENT.PORTRAIT
-    sec.page_width, sec.page_height = (Cm(29.7), Cm(21)) if landscape else (Cm(21), Cm(29.7))
-    return sec
-
-
 def page_break():
     doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
 
@@ -258,12 +249,12 @@ table([2400, 6626], ["Elemento del caso", "Definición"], [
 ])
 p()
 h2("2.1 Necesidades de información identificadas")
-for t in ["Identificar cada sensor, su tipo, su ubicación en la sucursal y su estado.",
-          "Registrar cada lectura con su valor, unidad y fecha y hora.",
+for t in ["Identificar cada sensor, su tipo y su ubicación en la sucursal.",
+          "Registrar cada lectura con su valor y fecha y hora.",
           "Definir umbrales por tipo de sensor para detectar valores fuera de rango (alertas proactivas).",
           "Detectar la ausencia de datos de un sensor mediante un tiempo de espera (timeout) desde la última lectura.",
           "Detectar la pérdida de conexión y advertirla al técnico.",
-          "Persistir las lecturas y alertas en MySQL para su consulta posterior (base para RF-11)."]:
+          "Guardar las lecturas y alertas en MySQL para su consulta posterior (base para RF-11)."]:
     bullet(t)
 
 # ---------- 3. Technologies ----------
@@ -275,7 +266,7 @@ table([2200, 3300, 3526], ["Tecnología", "Rol en la solución", "Motivo de la e
     ["DHT22", "Sensor de temperatura y humedad.", "Económico y suficiente en precisión para bodegas y salas."],
     ["Sensor IR/ToF", "Conteo de personas en accesos.", "Detecta el paso sin contacto ni cámaras."],
     ["MQTT (Mosquitto)", "Protocolo y broker de mensajería entre los nodos y el servidor.", "Liviano, publicación/suscripción y tolerante a redes inestables."],
-    ["Flask (Python)", "Backend: ingesta, servicio de monitoreo y alertas, API REST y SSE.", "Ya utilizado en el sistema de la Etapa 2."],
+    ["Flask (Python)", "Backend: recibe lecturas, genera alertas y envía datos al panel.", "Ya utilizado en el sistema de la Etapa 2."],
     ["SSE", "Canal de actualización en tiempo real hacia el navegador.", "Más simple que WebSocket para un flujo en un solo sentido."],
     ["MySQL", "Almacenamiento de lecturas, sensores, umbrales y alertas.", "Es la base de datos que utiliza la empresa según el caso."],
 ])
@@ -283,87 +274,74 @@ p()
 
 # ---------- 4. Class diagram ----------
 
-new_section(landscape=True)
 h1("4. Diagrama de clases")
-p("El diagrama representa los elementos clave del monitoreo de información. Está escrito en PlantUML (archivo diagramas/clases_rf10.puml, versión en alta resolución en diagramas/clases_rf10.png) y orientado al prototipo web.")
-picture(DIAGRAM_CLASSES, "Figura 1. Diagrama de clases UML del monitoreo de sensores (RF-10).", width_cm=21)
-new_section(landscape=False)
-h2("4.1 Clases y enumeraciones")
+p("El diagrama muestra solo las clases necesarias para el monitoreo de RF-10, orientado al prototipo web. Está escrito en PlantUML (archivo diagramas/clases_rf10.puml).")
+picture(DIAGRAM_CLASSES, "Figura 1. Diagrama de clases UML del monitoreo de sensores (RF-10).", width_cm=16)
+h2("4.1 Clases")
 table([2400, 6626], ["Clase", "Responsabilidad"], [
-    ["Sucursal", "Local de BookVerse donde se instalan los sensores; agrupa sensores y umbrales."],
-    ["Sensor (abstracta)", "Dispositivo con identificador, tipo, ubicación, estado y marca de la última lectura. Registra lecturas y determina si está inactivo según un timeout."],
-    ["SensorTemperatura, SensorHumedad, SensorConteoPersonas", "Especializaciones de Sensor, cada una con su unidad de medida (°C, %HR, personas)."],
-    ["Lectura", "Dato medido por un sensor: valor, unidad y fecha y hora."],
-    ["Umbral", "Rango permitido (mínimo y máximo) por tipo de sensor; indica si un valor está fuera de rango."],
-    ["Alerta", "Advertencia con tipo (FUERA_DE_RANGO, SENSOR_SIN_DATOS, SIN_CONEXION), severidad, estado y mensaje; puede reconocerse y resolverse."],
-    ["MonitorService", "Servicio central: recibe lecturas, verifica sensores inactivos (flujo alterno), detecta la pérdida de conexión (excepción) y entrega los últimos valores."],
-    ["LecturaRepository (interfaz) y LecturaMySQLRepository", "Persistencia de lecturas; implementa el almacenamiento automático en MySQL y la consulta por sensor y rango de fechas."],
-    ["PanelMonitoreo", "Interfaz web que actualiza los valores en pantalla y muestra las advertencias."],
-    ["TecnicoMantenimiento", "Actor que consulta el panel y reconoce alertas."],
-    ["TipoSensor, EstadoSensor, TipoAlerta, Severidad, EstadoAlerta", "Enumeraciones que acotan los valores permitidos."],
+    ["Sucursal", "Local de BookVerse donde se instalan los sensores y se definen los umbrales."],
+    ["Sensor", "Dispositivo con tipo, ubicación y hora de su última lectura. estaActivo() indica si envió datos dentro del tiempo de espera (timeout)."],
+    ["Lectura", "Valor medido por un sensor en una fecha y hora."],
+    ["Umbral", "Rango permitido (mínimo y máximo) para un tipo de sensor en una sucursal."],
+    ["Alerta", "Advertencia sobre un sensor: valor fuera de rango o sensor sin datos."],
+    ["ServicioMonitoreo", "Recibe cada lectura, la compara con el umbral, la guarda y revisa periódicamente los sensores que dejaron de enviar datos."],
+    ["RepositorioLecturas (interfaz)", "Define cómo se guardan las lecturas. La implementación con MySQL se diseña en RF-11."],
+    ["PanelMonitoreo", "Pantalla web que muestra los valores en vivo y las advertencias."],
+    ["TipoSensor, TipoAlerta", "Enumeraciones con los valores permitidos de tipo de sensor y tipo de alerta."],
 ])
 p()
-h2("4.2 Relaciones")
+h2("4.2 Decisiones de diseño")
 for parts in [
-    [("Herencia: ", "bold"), ("SensorTemperatura, SensorHumedad y SensorConteoPersonas heredan de Sensor.", "")],
-    [("Composición Sucursal - Sensor (1 a 1..*): ", "bold"), ("una sucursal instala uno o más sensores; el sensor no existe sin su sucursal.", "")],
-    [("Agregación Sensor - Lectura (1 a 0..*): ", "bold"), ("un sensor genera muchas lecturas a lo largo del tiempo.", "")],
-    [("Agregación Sucursal - Umbral (1 a 0..*): ", "bold"), ("cada sucursal configura los rangos aceptables.", "")],
-    [("Asociación MonitorService - Alerta (1 a 0..*): ", "bold"), ("el servicio genera alertas; cada alerta apunta a un sensor de origen (0..1, porque SIN_CONEXION no pertenece a un sensor concreto).", "")],
-    [("Dependencias de MonitorService: ", "bold"), ("supervisa Sensor, compara con Umbral y guarda lecturas mediante LecturaRepository, lo que desacopla el servicio de MySQL.", "")],
-    [("Realización: ", "bold"), ("LecturaMySQLRepository implementa LecturaRepository.", "")],
-    [("PanelMonitoreo y TecnicoMantenimiento: ", "bold"), ("el panel consulta al servicio y muestra alertas; uno o más técnicos usan el panel y monitorean una o más sucursales.", "")],
+    [("Un solo Sensor con TipoSensor: ", "bold"), ("los tres sensores solo se diferencian por lo que miden, por eso se usa un atributo tipo en lugar de tres subclases.", "")],
+    [("Estado calculado: ", "bold"), ("el sensor no guarda un estado; estaActivo() lo calcula desde la última lectura, así no hay datos que se desincronicen.", "")],
+    [("Composición Sucursal - Sensor y Sucursal - Umbral: ", "bold"), ("sensores y umbrales pertenecen a una sucursal y no existen sin ella.", "")],
+    [("Interfaz RepositorioLecturas: ", "bold"), ("el servicio no depende de MySQL directamente; la base de datos puede cambiar sin modificar el servicio.", "")],
+    [("Pérdida de conexión en el panel: ", "bold"), ("si falla internet, el servidor no puede avisar; por eso es el panel web el que detecta que se cortó la conexión y muestra la advertencia.", "")],
 ]:
     bullet(parts)
 
 # ---------- 5. Architecture diagram ----------
 
+page_break()
 h1("5. Diagrama de arquitectura de alto nivel")
-p("El diagrama (archivo diagramas/arquitectura_rf10.puml) muestra los componentes esenciales, cómo se conectan y los protocolos utilizados.")
+p("El diagrama (archivo diagramas/arquitectura_rf10.puml) muestra los cinco componentes esenciales y los protocolos que los conectan.")
 picture(DIAGRAM_ARCHITECTURE, "Figura 2. Arquitectura de alto nivel del monitoreo de sensores (RF-10).", width_cm=16)
 h2("5.1 Componentes")
 table([2600, 6426], ["Componente", "Función"], [
-    ["Nodo ESP32 con DHT22 y sensor IR/ToF", "Mide temperatura, humedad y paso de personas; el firmware publica las lecturas y un heartbeat periódico."],
-    ["Broker MQTT (Mosquitto)", "Recibe los mensajes de todas las sucursales y los entrega a los suscriptores."],
-    ["Ingesta (suscriptor MQTT)", "Se suscribe al broker, valida las lecturas y las entrega al servicio de monitoreo."],
-    ["Servicio de monitoreo y alertas", "Aplica umbrales, controla el timeout de heartbeat de cada sensor y el estado de la conexión, genera alertas, guarda los datos en MySQL y publica novedades hacia el canal en tiempo real."],
-    ["API REST", "Entrega historial y estado actual al panel."],
-    ["Stream SSE", "Envía en vivo valores y alertas nuevos al navegador."],
-    ["MySQL", "Almacena lecturas, sensores, umbrales y alertas."],
-    ["Panel web de monitoreo", "Muestra valores actualizados y advertencias al técnico de mantenimiento."],
+    ["Sensores en sucursal", "ESP32 con DHT22 (temperatura y humedad) y contador de personas; publica las lecturas por MQTT."],
+    ["Broker MQTT (Mosquitto)", "Recibe los mensajes de todas las sucursales y los entrega al backend."],
+    ["Backend Flask", "Recibe las lecturas, aplica umbrales, genera alertas, guarda los datos y los envía al panel."],
+    ["MySQL", "Almacena lecturas y alertas para consultas posteriores."],
+    ["Panel web", "Muestra los valores en vivo al técnico de mantenimiento y advierte si se pierde la conexión."],
 ])
 p()
-h2("5.2 Flujo de datos paso a paso")
+h2("5.2 Flujo de datos")
 numbered([
-    "Los sensores DHT22 e IR/ToF entregan su medición al firmware del ESP32 (I2C/GPIO).",
-    "El ESP32 publica la lectura y un heartbeat en el broker MQTT mediante Wi-Fi.",
-    "La ingesta, suscrita al broker, recibe el mensaje, lo valida y lo entrega al servicio de monitoreo junto con la marca de último dato del sensor.",
-    "El servicio compara el valor con el umbral y, si corresponde, genera una alerta FUERA_DE_RANGO.",
-    "El servicio almacena la lectura (y la alerta) en MySQL mediante SQL, sin intervención del usuario.",
-    "El servicio publica los valores y alertas nuevos en el stream SSE, que actualiza el panel web en vivo (flujo normal).",
-    "Si un sensor no envía datos tras el timeout, el servicio de monitoreo lo marca SIN_DATOS y genera la alerta SENSOR_SIN_DATOS, que se muestra en el panel (flujo alterno).",
-    "Si la conexión falla, el servicio de monitoreo genera la alerta SIN_CONEXION y el panel muestra la advertencia (excepción).",
-    "El técnico consulta el historial y el estado por HTTP/REST; los datos permanecen en MySQL para análisis posteriores.",
+    "El ESP32 lee los sensores y publica cada lectura en el broker MQTT.",
+    "El backend recibe la lectura, la compara con el umbral y, si está fuera de rango, crea una alerta.",
+    "El backend guarda la lectura y la alerta en MySQL.",
+    "El backend envía los valores nuevos al panel web por SSE, que los muestra en vivo (flujo normal).",
+    "Si un sensor deja de enviar datos, el backend crea la alerta SENSOR_SIN_DATOS y el panel la muestra (flujo alterno).",
+    "Si se corta la conexión, el panel lo detecta y muestra una advertencia (excepción).",
 ])
 p()
 
 # ---------- 6. Verification ----------
 
-page_break()
 h1("6. Verificación del diseño")
 p("Se comprobó que cada paso del requerimiento RF-10 está cubierto por al menos una clase y un componente.")
 table([2300, 2300, 2200, 2226], ["Elemento de RF-10", "Cómo se cubre", "Clases", "Componentes"], [
-    ["Precondición: sensores instalados y configurados", "Los sensores existen asociados a una sucursal, con tipo y ubicación.", "Sucursal, Sensor y subclases, Umbral", "Nodo ESP32, sensores"],
-    ["Flujo normal: recibir datos", "El servicio recibe y valida cada lectura.", "MonitorService, Lectura, Sensor", "Broker MQTT, Ingesta"],
-    ["Flujo normal: mostrar valores actualizados", "El panel actualiza los valores en vivo.", "PanelMonitoreo, MonitorService", "Stream SSE, Panel web"],
-    ["Flujo normal: almacenar automáticamente", "Cada lectura se guarda al recibirse.", "LecturaRepository, LecturaMySQLRepository", "Servicio de monitoreo, MySQL"],
-    ["Flujo alterno: sensor deja de enviar datos", "El timeout desde la última lectura marca el sensor y genera una advertencia en pantalla.", "Sensor.estaInactivo, MonitorService.verificarSensoresInactivos, Alerta (SENSOR_SIN_DATOS)", "Servicio de monitoreo y alertas, SSE, Panel web"],
-    ["Excepción: falla la conexión", "Se detecta la pérdida de conexión y se genera un mensaje de advertencia.", "MonitorService.detectarPerdidaConexion, Alerta (SIN_CONEXION)", "Servicio de monitoreo y alertas, Panel web"],
-    ["Postcondición: datos para consultas y análisis", "Las lecturas se consultan por sensor y rango de fechas.", "LecturaRepository.consultarPorSensor", "MySQL, API REST"],
-    ["Necesidad del caso: alertas proactivas", "Valores fuera del umbral generan alertas.", "Umbral, Alerta (FUERA_DE_RANGO)", "Servicio de monitoreo y alertas"],
+    ["Precondición: sensores instalados y configurados", "Cada sensor pertenece a una sucursal y tiene tipo y ubicación.", "Sucursal, Sensor", "Sensores en sucursal"],
+    ["Flujo normal: recibir datos", "El servicio recibe cada lectura.", "ServicioMonitoreo, Lectura", "Broker MQTT, Backend Flask"],
+    ["Flujo normal: mostrar valores", "El panel muestra los valores en vivo.", "PanelMonitoreo", "Panel web (SSE)"],
+    ["Flujo normal: guardar automáticamente", "Cada lectura se guarda al recibirse.", "RepositorioLecturas", "Backend Flask, MySQL"],
+    ["Flujo alterno: sensor sin datos", "Se revisa la última lectura de cada sensor y se crea una alerta.", "Sensor.estaActivo, ServicioMonitoreo.revisarSensoresSinDatos, Alerta", "Backend Flask, Panel web"],
+    ["Excepción: falla la conexión", "El panel detecta el corte y muestra una advertencia.", "PanelMonitoreo.mostrarAdvertencia", "Panel web"],
+    ["Postcondición: datos para análisis", "Las lecturas quedan guardadas.", "RepositorioLecturas, Lectura", "MySQL"],
+    ["Necesidad del caso: alertas proactivas", "Valores fuera del umbral generan alertas.", "Umbral, Alerta", "Backend Flask"],
 ])
 p()
-p("Coherencia entre ambos diagramas: cada clase de servicio tiene su componente (MonitorService y el servicio de monitoreo y alertas, LecturaRepository y MySQL, PanelMonitoreo y el panel web), y el flujo de datos es el mismo en los dos modelos: sensor, broker, backend, base de datos y panel.")
+p("Coherencia entre ambos diagramas: ServicioMonitoreo vive en el backend Flask, RepositorioLecturas en MySQL y PanelMonitoreo en el panel web; el flujo es el mismo en los dos modelos: sensor, broker, backend, base de datos y panel.")
 note("Pendiente: compartir los diagramas con el docente y registrar sus observaciones.")
 
 # ---------- 7. Next steps ----------
@@ -371,7 +349,7 @@ note("Pendiente: compartir los diagramas con el docente y registrar sus observac
 h1("7. Próximos pasos")
 for t in ["Avance #2 (RF-11): modelar el almacenamiento de los datos de los sensores en MySQL (modelo de datos y arquitectura de módulos y base de datos).",
           "Construir el prototipo web: simulador de sensores que publique en MQTT, servicio de ingesta con Flask y panel con actualización en vivo.",
-          "Definir los valores de los umbrales y el timeout de heartbeat junto con el técnico de mantenimiento.",
+          "Definir los valores de los umbrales y el tiempo de espera sin datos junto con el técnico de mantenimiento.",
           "Incorporar las observaciones del docente al modelo antes de implementar."]:
     bullet(t)
 

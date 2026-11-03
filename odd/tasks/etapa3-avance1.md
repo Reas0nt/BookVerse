@@ -52,3 +52,6 @@ Share diagrams with teacher; open PR when user decides.
 ## Status
 Advisory fixes applied: monitoring service owns heartbeat timeout (watcher removed), unused enum value and dead helpers removed, report script paths resolved from its own folder.
 Done. Pending for the group: rewrite closing-question drafts, confirm cover date, share diagrams with the teacher.
+
+## Simplification (user request, branch feat/etapa3-uml-simple)
+- [x] T4 Simplify UML: class diagram 18 -> 10 boxes (single Sensor + TipoSensor, derived active state, only TipoSensor/TipoAlerta enums, no enum arrows, repository as interface only, technician moved to architecture, connection loss detected by the panel). Architecture 9 -> 5 boxes. Report sections 4-6 rewritten, portrait layout, 8 pages. Route: inline (diagrams designed by parent, one report file).

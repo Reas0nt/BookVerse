@@ -1,8 +1,7 @@
 @startuml clases_rf10
-title RF-10 Monitoreo de sensores ambientales - Diagrama de clases
+title RF-10 Monitoreo de sensores - Diagrama de clases
 skinparam classAttributeIconSize 0
 skinparam shadowing false
-skinparam linetype ortho
 skinparam class {
   BackgroundColor #FDFEFE
   BorderColor #34495E
@@ -10,73 +9,26 @@ skinparam class {
 }
 hide empty members
 
-enum TipoSensor {
-  TEMPERATURA
-  HUMEDAD
-  CONTEO_PERSONAS
-}
-
-enum EstadoSensor {
-  ACTIVO
-  SIN_DATOS
-}
-
-enum TipoAlerta {
-  FUERA_DE_RANGO
-  SENSOR_SIN_DATOS
-  SIN_CONEXION
-}
-
-enum Severidad {
-  INFORMATIVA
-  ADVERTENCIA
-  CRITICA
-}
-
-enum EstadoAlerta {
-  ACTIVA
-  RECONOCIDA
-  RESUELTA
-}
-
 class Sucursal {
   - id: int
   - nombre: String
-  - direccion: String
-  + obtenerSensores(): List<Sensor>
 }
 
-abstract class Sensor {
+class Sensor {
   - id: String
   - tipo: TipoSensor
   - ubicacion: String
-  - estado: EstadoSensor
   - ultimaLectura: DateTime
-  + registrarLectura(valor: double): Lectura
-  + estaInactivo(timeoutSeg: int): boolean
-}
-
-class SensorTemperatura {
-  - unidad: String = "°C"
-}
-
-class SensorHumedad {
-  - unidad: String = "%HR"
-}
-
-class SensorConteoPersonas {
-  - unidad: String = "personas"
-  - sentido: String
+  + estaActivo(timeoutSeg: int): boolean
 }
 
 class Lectura {
   - valor: double
-  - unidad: String
   - fechaHora: DateTime
 }
 
 class Umbral {
-  - tipoSensor: TipoSensor
+  - tipo: TipoSensor
   - minimo: double
   - maximo: double
   + estaFueraDeRango(valor: double): boolean
@@ -84,72 +36,43 @@ class Umbral {
 
 class Alerta {
   - tipo: TipoAlerta
-  - severidad: Severidad
-  - estado: EstadoAlerta
   - mensaje: String
   - fechaHora: DateTime
-  + reconocer(): void
-  + resolver(): void
 }
 
-class MonitorService {
-  - timeoutSinDatosSeg: int
-  + recibirLectura(sensorId: String, valor: double): Lectura
-  + verificarSensoresInactivos(): List<Alerta>
-  + detectarPerdidaConexion(): Alerta
-  + obtenerUltimosValores(sucursalId: int): List<Lectura>
+class ServicioMonitoreo {
+  + recibirLectura(sensorId: String, valor: double): void
+  + revisarSensoresSinDatos(): void
 }
 
-interface LecturaRepository {
+interface RepositorioLecturas {
   + guardar(lectura: Lectura): void
-  + consultarPorSensor(sensorId: String, desde: DateTime, hasta: DateTime): List<Lectura>
-}
-
-class LecturaMySQLRepository {
-  - conexion: Connection
 }
 
 class PanelMonitoreo {
-  + actualizarValores(lecturas: List<Lectura>): void
-  + mostrarAdvertencia(alerta: Alerta): void
+  + mostrarValores(lecturas: List<Lectura>): void
+  + mostrarAdvertencia(mensaje: String): void
 }
 
-class TecnicoMantenimiento {
-  - id: int
-  - nombre: String
-  + consultarPanel(): void
-  + reconocerAlerta(alerta: Alerta): void
+enum TipoSensor {
+  TEMPERATURA
+  HUMEDAD
+  CONTEO_PERSONAS
 }
 
-Sensor <|-- SensorTemperatura
-Sensor <|-- SensorHumedad
-Sensor <|-- SensorConteoPersonas
+enum TipoAlerta {
+  FUERA_DE_RANGO
+  SENSOR_SIN_DATOS
+}
 
-Sucursal "1" *-- "1..*" Sensor : instala >
-Sensor "1" o-- "0..*" Lectura : genera >
-Sensor "1" --> "1" TipoSensor
-Sensor "1" --> "1" EstadoSensor
-Sucursal "1" o-- "0..*" Umbral : configura >
+Sucursal "1" *-- "1..*" Sensor : tiene
+Sucursal "1" *-- "0..*" Umbral : define
+Sensor "1" -- "0..*" Lectura : registra
+Alerta "0..*" --> "1" Sensor : sobre
 
-MonitorService ..> Sensor : supervisa
-MonitorService ..> Umbral : compara con
-MonitorService "1" --> "0..*" Alerta : genera >
-MonitorService --> LecturaRepository : guarda lecturas
-LecturaRepository <|.. LecturaMySQLRepository
-Alerta "0..*" --> "0..1" Sensor : origen
-Alerta --> TipoAlerta
-Alerta --> Severidad
-Alerta --> EstadoAlerta
+ServicioMonitoreo ..> Umbral : evalúa
+ServicioMonitoreo ..> Alerta : crea
+ServicioMonitoreo --> RepositorioLecturas : guarda
+PanelMonitoreo --> ServicioMonitoreo : consulta
 
-PanelMonitoreo ..> MonitorService : consulta / SSE
-PanelMonitoreo ..> Alerta : muestra
-TecnicoMantenimiento "1..*" --> "1" PanelMonitoreo : usa
-TecnicoMantenimiento "1..*" --> "1..*" Sucursal : monitorea
-
-note bottom of MonitorService
-  Flujo alterno: verificarSensoresInactivos()
-  marca SIN_DATOS si ultimaLectura supera el timeout.
-  Excepción: detectarPerdidaConexion()
-  genera Alerta SIN_CONEXION.
-end note
 @enduml
