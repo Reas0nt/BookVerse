@@ -50,4 +50,5 @@ Share diagrams with teacher; open PR when user decides.
 - Advisory (non-blocking): report script uses cwd-relative paths (same as stage 2 convention), unused helper/table params, timeout responsibility shown in both "Vigilante de heartbeat" and monitoring service, unused enum value, diagram script keeps stale PNG on partial failure.
 
 ## Status
+Advisory fixes applied: monitoring service owns heartbeat timeout (watcher removed), unused enum value and dead helpers removed, report script paths resolved from its own folder.
 Done. Pending for the group: rewrite closing-question drafts, confirm cover date, share diagrams with the teacher.

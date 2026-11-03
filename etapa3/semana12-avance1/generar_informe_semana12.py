@@ -1,5 +1,7 @@
 """Generate the RF-10 progress report (Etapa 3, Avance #1, week 12) as a Word document."""
 
+from pathlib import Path
+
 from docx import Document
 from docx.enum.section import WD_ORIENT, WD_SECTION
 from docx.enum.table import WD_TABLE_ALIGNMENT
@@ -8,7 +10,8 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Cm, Pt, RGBColor, Twips
 
-OUTPUT = "Informe_Avance1_RF10_Semana12.docx"
+HERE = Path(__file__).resolve().parent
+OUTPUT = HERE / "Informe_Avance1_RF10_Semana12.docx"
 FONT = "Calibri"
 MEMBERS = ["Bastián Andrade", "María Ojeda", "Maikol Ulloa"]
 
@@ -94,12 +97,6 @@ def numbered(items):
         add_run(par, f"{i}.\t{text}")
 
 
-def code(text):
-    par = p(after=2)
-    add_run(par, text, font="Consolas", size=10)
-    shade(par._p.get_or_add_pPr(), COLOR_CODE)
-
-
 def note(text):
     par = p(after=8)
     par.paragraph_format.space_before = Pt(3)
@@ -127,7 +124,7 @@ def fill_cell(cell, text, width, fill, bold=False, color=None, center=False):
     add_run(par, str(text), bold=bold, color=color, size=10)
 
 
-def table(widths, head, rows, center_cols=(), bold_last=False, row_fill=None):
+def table(widths, head, rows):
     """Table with dark header, zebra rows and light borders. Widths in twips."""
     tbl = doc.add_table(rows=1, cols=len(head))
     tbl.alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -138,10 +135,9 @@ def table(widths, head, rows, center_cols=(), bold_last=False, row_fill=None):
         fill_cell(tbl.rows[0].cells[c], text, widths[c], COLOR_HEADER, bold=True, color="FFFFFF", center=True)
     for i, row in enumerate(rows):
         cells = tbl.add_row().cells
-        fill = row_fill or (COLOR_ZEBRA if i % 2 else "FFFFFF")
+        fill = COLOR_ZEBRA if i % 2 else "FFFFFF"
         for c, text in enumerate(row):
-            fill_cell(cells[c], text, widths[c], fill,
-                      bold=bold_last and c == len(row) - 1, center=c in center_cols)
+            fill_cell(cells[c], text, widths[c], fill)
     for row in tbl.rows:  # keep each row on one page
         row._tr.get_or_add_trPr().append(OxmlElement("w:cantSplit"))
     return tbl
@@ -217,8 +213,8 @@ for name, size, color, before, after in (("Heading 1", 16, COLOR_TITLE, 18, 8),
 
 add_page_number_footer("BookVerse - RF-10 - Etapa 3 Avance #1 - Página ")
 
-DIAGRAM_CLASSES = "diagramas/clases_rf10.png"
-DIAGRAM_ARCHITECTURE = "diagramas/arquitectura_rf10.png"
+DIAGRAM_CLASSES = str(HERE / "diagramas" / "clases_rf10.png")
+DIAGRAM_ARCHITECTURE = str(HERE / "diagramas" / "arquitectura_rf10.png")
 
 # ---------- Cover ----------
 
@@ -330,8 +326,7 @@ table([2600, 6426], ["Componente", "Función"], [
     ["Nodo ESP32 con DHT22 y sensor IR/ToF", "Mide temperatura, humedad y paso de personas; el firmware publica las lecturas y un heartbeat periódico."],
     ["Broker MQTT (Mosquitto)", "Recibe los mensajes de todas las sucursales y los entrega a los suscriptores."],
     ["Ingesta (suscriptor MQTT)", "Se suscribe al broker, valida las lecturas y las entrega al servicio de monitoreo."],
-    ["Servicio de monitoreo y alertas", "Aplica umbrales, genera alertas, guarda los datos en MySQL y publica novedades hacia el canal en tiempo real."],
-    ["Vigilante de heartbeat", "Registra la marca del último dato de cada sensor y detecta el timeout o la caída de la conexión."],
+    ["Servicio de monitoreo y alertas", "Aplica umbrales, controla el timeout de heartbeat de cada sensor y el estado de la conexión, genera alertas, guarda los datos en MySQL y publica novedades hacia el canal en tiempo real."],
     ["API REST", "Entrega historial y estado actual al panel."],
     ["Stream SSE", "Envía en vivo valores y alertas nuevos al navegador."],
     ["MySQL", "Almacena lecturas, sensores, umbrales y alertas."],
@@ -342,12 +337,12 @@ h2("5.2 Flujo de datos paso a paso")
 numbered([
     "Los sensores DHT22 e IR/ToF entregan su medición al firmware del ESP32 (I2C/GPIO).",
     "El ESP32 publica la lectura y un heartbeat en el broker MQTT mediante Wi-Fi.",
-    "La ingesta, suscrita al broker, recibe el mensaje, lo valida y lo entrega al servicio de monitoreo; además actualiza la marca de último dato del vigilante.",
+    "La ingesta, suscrita al broker, recibe el mensaje, lo valida y lo entrega al servicio de monitoreo junto con la marca de último dato del sensor.",
     "El servicio compara el valor con el umbral y, si corresponde, genera una alerta FUERA_DE_RANGO.",
     "El servicio almacena la lectura (y la alerta) en MySQL mediante SQL, sin intervención del usuario.",
     "El servicio publica los valores y alertas nuevos en el stream SSE, que actualiza el panel web en vivo (flujo normal).",
-    "Si un sensor no envía datos tras el timeout, el vigilante genera la alerta SENSOR_SIN_DATOS, que se muestra en el panel (flujo alterno).",
-    "Si la conexión falla, el vigilante genera la alerta SIN_CONEXION y el panel muestra la advertencia (excepción).",
+    "Si un sensor no envía datos tras el timeout, el servicio de monitoreo lo marca SIN_DATOS y genera la alerta SENSOR_SIN_DATOS, que se muestra en el panel (flujo alterno).",
+    "Si la conexión falla, el servicio de monitoreo genera la alerta SIN_CONEXION y el panel muestra la advertencia (excepción).",
     "El técnico consulta el historial y el estado por HTTP/REST; los datos permanecen en MySQL para análisis posteriores.",
 ])
 p()
@@ -362,8 +357,8 @@ table([2300, 2300, 2200, 2226], ["Elemento de RF-10", "Cómo se cubre", "Clases"
     ["Flujo normal: recibir datos", "El servicio recibe y valida cada lectura.", "MonitorService, Lectura, Sensor", "Broker MQTT, Ingesta"],
     ["Flujo normal: mostrar valores actualizados", "El panel actualiza los valores en vivo.", "PanelMonitoreo, MonitorService", "Stream SSE, Panel web"],
     ["Flujo normal: almacenar automáticamente", "Cada lectura se guarda al recibirse.", "LecturaRepository, LecturaMySQLRepository", "Servicio de monitoreo, MySQL"],
-    ["Flujo alterno: sensor deja de enviar datos", "El timeout desde la última lectura marca el sensor y genera una advertencia en pantalla.", "Sensor.estaInactivo, MonitorService.verificarSensoresInactivos, Alerta (SENSOR_SIN_DATOS)", "Vigilante de heartbeat, SSE, Panel web"],
-    ["Excepción: falla la conexión", "Se detecta la pérdida de conexión y se genera un mensaje de advertencia.", "MonitorService.detectarPerdidaConexion, Alerta (SIN_CONEXION)", "Vigilante de heartbeat, Panel web"],
+    ["Flujo alterno: sensor deja de enviar datos", "El timeout desde la última lectura marca el sensor y genera una advertencia en pantalla.", "Sensor.estaInactivo, MonitorService.verificarSensoresInactivos, Alerta (SENSOR_SIN_DATOS)", "Servicio de monitoreo y alertas, SSE, Panel web"],
+    ["Excepción: falla la conexión", "Se detecta la pérdida de conexión y se genera un mensaje de advertencia.", "MonitorService.detectarPerdidaConexion, Alerta (SIN_CONEXION)", "Servicio de monitoreo y alertas, Panel web"],
     ["Postcondición: datos para consultas y análisis", "Las lecturas se consultan por sensor y rango de fechas.", "LecturaRepository.consultarPorSensor", "MySQL, API REST"],
     ["Necesidad del caso: alertas proactivas", "Valores fuera del umbral generan alertas.", "Umbral, Alerta (FUERA_DE_RANGO)", "Servicio de monitoreo y alertas"],
 ])
@@ -397,4 +392,4 @@ h1("9. Conclusión")
 p("Se analizó RF-10 y se elaboraron un diagrama de clases y un diagrama de arquitectura que cubren el flujo normal, el flujo alterno y la excepción del requerimiento. La tabla de verificación muestra que cada paso tiene clases y componentes que lo respaldan, lo que deja una base coherente para el prototipo web.")
 
 doc.save(OUTPUT)
-print(f"[ÉXITO] Archivo '{OUTPUT}' generado correctamente.")
+print(f"[ÉXITO] Archivo '{OUTPUT.name}' generado correctamente.")

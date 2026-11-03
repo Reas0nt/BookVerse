@@ -27,8 +27,7 @@ node "Servidor BookVerse" as Server {
   component "Broker MQTT\n(Mosquitto)" as Broker
   node "Backend Flask" as Backend {
     component "Ingesta\n(suscriptor MQTT)" as Ingesta
-    component "Servicio de monitoreo y alertas\n(umbrales, timeout, conexión)" as Monitor
-    component "Vigilante de heartbeat\n(timeout de sensores y conexión)" as Watch
+    component "Servicio de monitoreo y alertas\n(umbrales, timeout de heartbeat, conexión)" as Monitor
     component "API REST" as API
     component "Stream SSE\n(tiempo real)" as SSE
   }
@@ -43,11 +42,8 @@ DHT --> FW : lectura I2C/GPIO
 IR --> FW : lectura GPIO
 FW --> Broker : MQTT\nlecturas + heartbeat\n(Wi-Fi)
 Broker --> Ingesta : MQTT (suscripción)
-Ingesta --> Monitor : lectura validada
+Ingesta --> Monitor : lectura validada\n+ marca de último dato
 Monitor --> DB : SQL\nINSERT lecturas / alertas
-Ingesta --> Watch : marca de último dato
-Watch ..> Monitor : sin datos tras timeout:\nalerta SENSOR_SIN_DATOS
-Watch ..> Monitor : conexión caída:\nalerta SIN_CONEXION
 API --> DB : SQL SELECT
 Monitor --> SSE : valores y alertas nuevos
 SSE --> Panel : SSE (HTTP)\nactualización en vivo
@@ -55,7 +51,8 @@ Panel --> API : HTTP/REST\nhistorial y estado
 Tecnico --> Panel : consulta y\nreconoce alertas
 
 note bottom of Monitor
-  Ruta alterna: el heartbeat vencido marca el sensor como SIN_DATOS.
+  Flujo alterno: si un sensor supera el timeout de heartbeat,
+  el servicio lo marca SIN_DATOS y genera la alerta SENSOR_SIN_DATOS.
   Excepción: si falla la conexión, se genera la advertencia
   SIN_CONEXION y se muestra en el panel.
 end note

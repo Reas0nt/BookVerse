@@ -19,7 +19,6 @@ enum TipoSensor {
 enum EstadoSensor {
   ACTIVO
   SIN_DATOS
-  DESCONECTADO
 }
 
 enum TipoAlerta {
