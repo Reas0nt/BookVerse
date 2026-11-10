@@ -23,6 +23,7 @@ Mode: off (no project TDD config). Checks: the generators run, the DDL loads in 
 - [x] T1 (572bdd3) Diagrams + DDL: class, architecture, MER and relational PlantUML sources, PNGs, `schema_rf11.sql`. Route: delegated (writer trigger, 2+ non-trivial files).
 - [x] T2 (12718ae) Report: `generar_informe_semana13.py` -> `Informe_Avance2_RF11_Semana13.docx`. Route: delegated (same writer).
 - [x] T3 (b5e09eb) Packaging + docs: S13 in `empaquetar_entregables.py`, READMEs. Route: delegated (same writer).
+- [x] T4 (5bbac46) Review follow-ups: error_insercion without FK, UNIQUE(sensor_id, fecha_hora) on lectura, CHECK on alerta, rerunnable DDL, half-open range query, class/MER/relational/report aligned, atomic PNG write. Route: delegated (single writer).
 
 ## Acceptance criteria
 - The models cover the RF-11 flows: receive the reading, insert it, allow queries, and on a failed insert log the error and retry.
