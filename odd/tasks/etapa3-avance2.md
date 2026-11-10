@@ -41,3 +41,6 @@ Strategy: ask-on-risk. Forecast about 500 authored lines, mostly generator and d
 
 ## Next step
 Group rewrites closing questions; share with teacher; push/PR is the user's decision.
+
+## Review
+RDD 4 lenses (lineage review-228a6af112c69ce8, base main..99fca08): approved, acknowledged (authority burned). Advisory only, follow-ups: error_insercion FK blocks logging when the sensor/insert fails (R3/R4), retry not idempotent (no unique key on lectura sensor_id+fecha_hora), alerta invariants unenforced, DDL not rerunnable, ErrorInsercion attributes drift between class diagram and DDL.
