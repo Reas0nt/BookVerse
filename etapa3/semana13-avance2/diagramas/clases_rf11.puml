@@ -1,0 +1,76 @@
+@startuml clases_rf11
+title RF-11 Almacenamiento de datos de sensores - Diagrama de clases
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam class {
+  BackgroundColor #FDFEFE
+  BorderColor #34495E
+  ArrowColor #34495E
+}
+hide empty members
+
+class ServicioMonitoreo {
+  + recibirLectura(sensorId: String, valor: double): void
+}
+
+interface RepositorioLecturas {
+  + guardar(lectura: Lectura): void
+  + buscarPorSensor(sensorId: String, desde: DateTime, hasta: DateTime): List<Lectura>
+  + temperaturasFueraDeRango(desde: DateTime, hasta: DateTime): List<Lectura>
+}
+
+class RepositorioLecturasMySQL {
+  - maxIntentos: int
+  + guardar(lectura: Lectura): void
+  - registrarError(lectura: Lectura, mensaje: String, intentos: int): void
+}
+
+class Sensor {
+  - id: String
+  - tipo: TipoSensor
+  - ubicacion: String
+}
+
+class Lectura {
+  - valor: double
+  - fechaHora: DateTime
+}
+
+class Umbral {
+  - tipo: TipoSensor
+  - minimo: double
+  - maximo: double
+  + estaFueraDeRango(valor: double): boolean
+}
+
+class Alerta {
+  - tipo: TipoAlerta
+  - mensaje: String
+  - fechaHora: DateTime
+}
+
+class ErrorInsercion {
+  - fechaHora: DateTime
+  - mensaje: String
+  - intentos: int
+}
+
+class Sucursal {
+  - id: int
+  - nombre: String
+}
+
+Sucursal "1" *-- "1..*" Sensor : tiene
+Sucursal "1" *-- "0..*" Umbral : define
+Sensor "1" -- "0..*" Lectura : registra
+Sensor "1" -- "0..*" ErrorInsercion : falla en
+Alerta "0..*" --> "1" Sensor : sobre
+Alerta "0..*" --> "0..1" Lectura : originada por
+
+ServicioMonitoreo ..> Umbral : evalúa
+ServicioMonitoreo ..> Alerta : crea
+ServicioMonitoreo --> RepositorioLecturas : guarda con
+RepositorioLecturasMySQL ..|> RepositorioLecturas
+RepositorioLecturasMySQL ..> ErrorInsercion : registra
+
+@enduml

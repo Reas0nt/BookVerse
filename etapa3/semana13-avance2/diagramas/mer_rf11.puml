@@ -1,0 +1,64 @@
+@startchen mer_rf11
+title RF-11 Modelo entidad-relación (MER)
+
+entity SUCURSAL {
+  id <<key>>
+  nombre
+}
+entity SENSOR {
+  id <<key>>
+  tipo
+  ubicacion
+}
+entity LECTURA {
+  id <<key>>
+  valor
+  fecha_hora
+}
+entity UMBRAL {
+  id <<key>>
+  tipo
+  minimo
+  maximo
+}
+entity ALERTA {
+  id <<key>>
+  tipo
+  mensaje
+  fecha_hora
+}
+entity ERROR_INSERCION {
+  id <<key>>
+  valor
+  fecha_hora_lectura
+  mensaje
+  intentos
+  fecha_hora_error
+}
+
+relationship TIENE {
+}
+relationship DEFINE {
+}
+relationship REGISTRA {
+}
+relationship GENERA {
+}
+relationship ORIGINA {
+}
+relationship FALLA_EN {
+}
+
+SUCURSAL -1- TIENE
+TIENE -N- SENSOR
+SUCURSAL -1- DEFINE
+DEFINE -N- UMBRAL
+SENSOR -1- REGISTRA
+REGISTRA -N- LECTURA
+SENSOR -1- GENERA
+GENERA -N- ALERTA
+LECTURA -1- ORIGINA
+ORIGINA -N- ALERTA
+SENSOR -1- FALLA_EN
+FALLA_EN -N- ERROR_INSERCION
+@endchen

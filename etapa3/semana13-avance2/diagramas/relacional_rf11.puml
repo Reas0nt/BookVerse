@@ -1,0 +1,72 @@
+@startuml relacional_rf11
+title RF-11 Modelo relacional (MySQL)
+hide circle
+skinparam linetype ortho
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam ArrowColor #34495E
+skinparam entity {
+  BackgroundColor #FDFEFE
+  BorderColor #34495E
+}
+
+entity sucursal {
+  * id : INT <<PK>>
+  --
+  * nombre : VARCHAR(80)
+}
+
+entity sensor {
+  * id : VARCHAR(30) <<PK>>
+  --
+  * sucursal_id : INT <<FK>>
+  * tipo : ENUM
+  * ubicacion : VARCHAR(80)
+}
+
+entity umbral {
+  * id : INT <<PK>>
+  --
+  * sucursal_id : INT <<FK>>
+  * tipo : ENUM
+  * minimo : DECIMAL(8,2)
+  * maximo : DECIMAL(8,2)
+}
+
+entity lectura {
+  * id : BIGINT <<PK>>
+  --
+  * sensor_id : VARCHAR(30) <<FK>>
+  * valor : DECIMAL(8,2)
+  * fecha_hora : DATETIME(3)
+}
+
+entity alerta {
+  * id : BIGINT <<PK>>
+  --
+  * sensor_id : VARCHAR(30) <<FK>>
+  lectura_id : BIGINT <<FK>>
+  * tipo : ENUM
+  * mensaje : VARCHAR(200)
+  * fecha_hora : DATETIME(3)
+}
+
+entity error_insercion {
+  * id : BIGINT <<PK>>
+  --
+  * sensor_id : VARCHAR(30) <<FK>>
+  * valor : DECIMAL(8,2)
+  * fecha_hora_lectura : DATETIME(3)
+  * mensaje : VARCHAR(200)
+  * intentos : INT
+  * fecha_hora_error : DATETIME(3)
+}
+
+sucursal ||--o{ sensor
+sucursal ||--o{ umbral
+sensor ||--o{ lectura
+sensor ||--o{ alerta
+sensor ||--o{ error_insercion
+lectura |o--o{ alerta
+
+@enduml

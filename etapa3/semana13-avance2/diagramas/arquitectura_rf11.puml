@@ -1,0 +1,33 @@
+@startuml arquitectura_rf11
+title RF-11 Almacenamiento de datos de sensores - Arquitectura
+left to right direction
+skinparam shadowing false
+skinparam componentStyle rectangle
+skinparam defaultFontName Arial
+skinparam ArrowColor #34495E
+skinparam rectangle {
+  BackgroundColor #FDFEFE
+  BorderColor #34495E
+}
+
+actor "Administrador\nde base de datos" as DBA
+
+rectangle "Sensores en sucursal\n(ESP32 + DHT22 + contador)" as Sensores
+rectangle "Broker MQTT\n(Mosquitto)" as Broker
+
+rectangle "Backend Flask" {
+  rectangle "Módulo de monitoreo\n(compara con umbral,\ncrea alertas)" as Monitoreo
+  rectangle "Módulo de almacenamiento\n(inserta y reintenta)" as Almacenamiento
+}
+
+database "MySQL\n(lecturas, alertas,\nerrores de inserción)" as DB
+rectangle "Panel web /\nreportes (RF-12)" as Panel
+
+Sensores --> Broker : MQTT
+Broker --> Monitoreo : MQTT
+Monitoreo --> Almacenamiento : lectura y alerta
+Almacenamiento --> DB : INSERT
+Panel --> DB : consultas SQL
+DBA --> DB : consultas SQL
+
+@enduml
