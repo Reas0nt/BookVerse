@@ -8,7 +8,7 @@ It is separate from Stage 2 (equipment maintenance, RF-06 to RF-09), which lives
 | Folder | Activity | Requirement | Deliverable | Guideline |
 |---|---|---|---|---|
 | `semana12-avance1/` | Avance #1 | RF-10 Sensor monitoring | UML class diagram + high-level architecture diagram | `docs/Pauta_Avance1_Semana12.docx` |
-| `semana13-avance2/` | Avance #2 | RF-11 Sensor data storage | UML data model + architecture diagram (modules and database) | Pending |
+| `semana13-avance2/` | Avance #2 | RF-11 Sensor data storage | Class diagram, architecture diagram, ER model (MER), relational model + MySQL schema | `docs/Pauta_Avance2_Semana13.docx` |
 | `semana14-avance3/` | Avance #3 | RF-12 Operational reports | UML report design + data flow diagram | Pending |
 | `semana15-avance4/` | Avance #4 | RF-13 Testing and adjustments | Test cases, results, observations and adjustments | Pending |
 | `semana16-evaluacion/` | Final evaluation | RF-10 to RF-13 | Web prototype, metacognitive sheet, induction matrix | `docs/Rubrica_Etapa3.docx` |
@@ -22,6 +22,7 @@ Confirm each one when its guideline is published.
 |---|---|
 | `docs/Caso_Etapa3.docx` | Case study with RF-10 to RF-13 detail (actor, flows, exceptions) |
 | `docs/Pauta_Avance1_Semana12.docx` | Avance #1 guideline (RF-10 UML model) |
+| `docs/Pauta_Avance2_Semana13.docx` | Avance #2 guideline (RF-11 data model) |
 | `docs/Rubrica_Etapa3.docx` | Stage 3 rubric |
 
 ## How Stage 3 is graded
@@ -43,6 +44,10 @@ Run from the repository root with the project virtualenv. Diagram rendering need
 cd etapa3/semana12-avance1
 ../../venv/bin/python generar_diagramas.py
 ../../venv/bin/python generar_informe_semana12.py
+# Avance #2 (week 13): diagrams (class, architecture, MER, relational), then the report
+cd ../semana13-avance2
+../../venv/bin/python generar_diagramas.py
+../../venv/bin/python generar_informe_semana13.py
 cd ../..
 
 # Package every deliverable (Stage 2 and Stage 3) into entregables/ and entregables.zip

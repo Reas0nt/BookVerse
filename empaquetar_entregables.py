@@ -42,6 +42,18 @@ DELIVERABLES = [
         "etapa3/semana12-avance1/diagramas/arquitectura_rf10.png",
         "etapa3/semana12-avance1/diagramas/arquitectura_rf10.puml",
     ]),
+    ("S13_Etapa3_Avance2_RF11_BaseDatos", [
+        "etapa3/semana13-avance2/Informe_Avance2_RF11_Semana13.docx",
+        "etapa3/semana13-avance2/schema_rf11.sql",
+        "etapa3/semana13-avance2/diagramas/clases_rf11.png",
+        "etapa3/semana13-avance2/diagramas/clases_rf11.puml",
+        "etapa3/semana13-avance2/diagramas/arquitectura_rf11.png",
+        "etapa3/semana13-avance2/diagramas/arquitectura_rf11.puml",
+        "etapa3/semana13-avance2/diagramas/mer_rf11.png",
+        "etapa3/semana13-avance2/diagramas/mer_rf11.puml",
+        "etapa3/semana13-avance2/diagramas/relacional_rf11.png",
+        "etapa3/semana13-avance2/diagramas/relacional_rf11.puml",
+    ]),
 ]
 
 SYSTEM_FILES = ["requirements.txt", "requirements-dev.txt"]
