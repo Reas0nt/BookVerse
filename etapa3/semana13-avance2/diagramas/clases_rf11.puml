@@ -50,9 +50,12 @@ class Alerta {
 }
 
 class ErrorInsercion {
-  - fechaHora: DateTime
+  - sensorId: String
+  - valor: double
+  - fechaHoraLectura: DateTime
   - mensaje: String
   - intentos: int
+  - fechaHoraError: DateTime
 }
 
 class Sucursal {
@@ -63,7 +66,6 @@ class Sucursal {
 Sucursal "1" *-- "1..*" Sensor : tiene
 Sucursal "1" *-- "0..*" Umbral : define
 Sensor "1" -- "0..*" Lectura : registra
-Sensor "1" -- "0..*" ErrorInsercion : falla en
 Alerta "0..*" --> "1" Sensor : sobre
 Alerta "0..*" --> "0..1" Lectura : originada por
 

@@ -26,7 +26,9 @@ def render(source: Path) -> Path:
     with urllib.request.urlopen(request, timeout=TIMEOUT_SECONDS) as response:
         png = response.read()
     target = source.with_suffix(".png")
-    target.write_bytes(png)
+    tmp = target.with_suffix(".png.tmp")
+    tmp.write_bytes(png)
+    tmp.replace(target)  # atomic: a failed render never leaves a broken PNG
     return target
 
 

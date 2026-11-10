@@ -39,6 +39,8 @@ entity lectura {
   * sensor_id : VARCHAR(30) <<FK>>
   * valor : DECIMAL(8,2)
   * fecha_hora : DATETIME(3)
+  --
+  <<UNIQUE>> (sensor_id, fecha_hora)
 }
 
 entity alerta {
@@ -54,7 +56,7 @@ entity alerta {
 entity error_insercion {
   * id : BIGINT <<PK>>
   --
-  * sensor_id : VARCHAR(30) <<FK>>
+  * sensor_id : VARCHAR(30)
   * valor : DECIMAL(8,2)
   * fecha_hora_lectura : DATETIME(3)
   * mensaje : VARCHAR(200)
@@ -66,7 +68,6 @@ sucursal ||--o{ sensor
 sucursal ||--o{ umbral
 sensor ||--o{ lectura
 sensor ||--o{ alerta
-sensor ||--o{ error_insercion
 lectura |o--o{ alerta
 
 @enduml

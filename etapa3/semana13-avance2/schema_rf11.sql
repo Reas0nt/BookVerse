@@ -1,9 +1,18 @@
 -- RF-11 - Storage of environmental sensor data (BookVerse, Etapa 3, Avance #2).
--- MySQL 8.0. Matches diagramas/relacional_rf11.puml exactly.
+-- MySQL 8.0.16+ (CHECK constraints are only enforced from 8.0.16; older versions ignore them).
+-- Matches diagramas/relacional_rf11.puml exactly. Safe to rerun: drops the tables first.
 
 CREATE DATABASE IF NOT EXISTS bookverse_sensores
   CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 USE bookverse_sensores;
+
+-- Drop in reverse dependency order so the script can be rerun.
+DROP TABLE IF EXISTS error_insercion;
+DROP TABLE IF EXISTS alerta;
+DROP TABLE IF EXISTS lectura;
+DROP TABLE IF EXISTS umbral;
+DROP TABLE IF EXISTS sensor;
+DROP TABLE IF EXISTS sucursal;
 
 CREATE TABLE sucursal (
   id     INT          NOT NULL AUTO_INCREMENT,
@@ -40,7 +49,9 @@ CREATE TABLE lectura (
   valor      DECIMAL(8,2) NOT NULL,
   fecha_hora DATETIME(3)  NOT NULL,
   PRIMARY KEY (id),
-  KEY ix_lectura_sensor_fecha (sensor_id, fecha_hora),
+  -- One reading per sensor and instant: a retried insert cannot duplicate it.
+  -- Retry pattern: INSERT ... ON DUPLICATE KEY UPDATE valor = VALUES(valor)  (or INSERT IGNORE).
+  UNIQUE KEY uq_lectura_sensor_fecha (sensor_id, fecha_hora),
   CONSTRAINT fk_lectura_sensor FOREIGN KEY (sensor_id) REFERENCES sensor (id)
 ) ENGINE=InnoDB;
 
@@ -55,10 +66,14 @@ CREATE TABLE alerta (
   KEY ix_alerta_sensor_fecha (sensor_id, fecha_hora),
   KEY ix_alerta_lectura (lectura_id),
   CONSTRAINT fk_alerta_sensor  FOREIGN KEY (sensor_id)  REFERENCES sensor (id),
-  CONSTRAINT fk_alerta_lectura FOREIGN KEY (lectura_id) REFERENCES lectura (id)
+  CONSTRAINT fk_alerta_lectura FOREIGN KEY (lectura_id) REFERENCES lectura (id),
+  -- An out-of-range alert must point to the reading that caused it.
+  CONSTRAINT ck_alerta_lectura CHECK (tipo <> 'FUERA_DE_RANGO' OR lectura_id IS NOT NULL)
 ) ENGINE=InnoDB;
 
 -- Log of failed inserts: written when a reading could not be stored after retrying.
+-- Deliberately NO foreign key: the failed insert may have referenced an unknown or bad
+-- sensor, and the error row must still be insertable. sensor_id is plain text here.
 CREATE TABLE error_insercion (
   id                 BIGINT       NOT NULL AUTO_INCREMENT,
   sensor_id          VARCHAR(30)  NOT NULL,
@@ -69,7 +84,6 @@ CREATE TABLE error_insercion (
   fecha_hora_error   DATETIME(3)  NOT NULL,
   PRIMARY KEY (id),
   KEY ix_error_sensor (sensor_id),
-  CONSTRAINT fk_error_sensor FOREIGN KEY (sensor_id) REFERENCES sensor (id),
   CONSTRAINT ck_error_intentos CHECK (intentos >= 1)
 ) ENGINE=InnoDB;
 
@@ -81,7 +95,7 @@ CREATE TABLE error_insercion (
 -- SELECT fecha_hora, valor
 --   FROM lectura
 --  WHERE sensor_id = 'T-BOD-01'
---    AND fecha_hora BETWEEN '2026-11-01 00:00:00' AND '2026-11-02 00:00:00'
+--    AND fecha_hora >= '2026-11-01 00:00:00' AND fecha_hora < '2026-11-02 00:00:00'
 --  ORDER BY fecha_hora;
 
 -- 2. Temperature readings outside the threshold of their branch.

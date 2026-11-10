@@ -257,7 +257,7 @@ numbered([
     "El servicio recibe la lectura (sensor, valor y fecha y hora) y la compara con el umbral de temperatura de la sucursal.",
     "La lectura se guarda siempre, esté o no dentro del rango. Así queda el historial completo y se pueden analizar las variaciones en el tiempo.",
     "Si el valor está fuera del rango, se crea además una alerta FUERA_DE_RANGO asociada a esa lectura.",
-    "Si la inserción falla, se registra el error y se reintenta hasta un máximo de intentos; si no se logra, queda el registro del error con el dato perdido.",
+    "Si la inserción falla, se reintenta hasta un máximo de intentos (sin duplicar la lectura, gracias a la clave única); si no se logra, se registra el error con el dato perdido.",
     "El administrador consulta después las lecturas por sensor y rango de fechas, las temperaturas fuera de umbral o los promedios por día y sucursal.",
 ])
 p()
@@ -273,7 +273,7 @@ table([2900, 6126], ["Clase", "Responsabilidad"], [
     ["ServicioMonitoreo", "Recibe cada lectura, la evalúa con el umbral, crea la alerta si corresponde y delega el guardado en el repositorio."],
     ["RepositorioLecturas (interfaz)", "Define las operaciones de almacenamiento y consulta: guardar, buscarPorSensor y temperaturasFueraDeRango."],
     ["RepositorioLecturasMySQL", "Implementa la interfaz con MySQL. Si guardar() falla, reintenta hasta maxIntentos y registra el error."],
-    ["ErrorInsercion", "Registro de un dato que no pudo insertarse: fecha y hora, mensaje e intentos realizados."],
+    ["ErrorInsercion", "Registro de un dato que no pudo insertarse: sensor, valor, fecha y hora de la lectura, mensaje, intentos realizados y fecha y hora del error."],
     ["Lectura, Sensor", "Valor medido en una fecha y hora, y el dispositivo que lo mide."],
     ["Umbral, Alerta", "Rango permitido por tipo de sensor y sucursal, y la advertencia generada cuando se sale de él."],
     ["Sucursal", "Local donde están los sensores y se definen los umbrales."],
@@ -319,8 +319,8 @@ table([3300, 1200, 4526], ["Relación", "Cardinalidad", "Significado"], [
     ["SENSOR REGISTRA LECTURA", "1 : N", "Un sensor registra muchas lecturas en el tiempo."],
     ["SENSOR GENERA ALERTA", "1 : N", "Una alerta siempre es sobre un sensor."],
     ["LECTURA ORIGINA ALERTA", "1 : N", "Una lectura puede originar alertas; las de tipo SENSOR_SIN_DATOS no tienen lectura."],
-    ["SENSOR FALLA_EN ERROR_INSERCION", "1 : N", "Un sensor puede tener varios datos que no se pudieron insertar."],
 ])
+p("La entidad ERROR_INSERCION queda sin relación a propósito: guarda el sensor como texto, porque el dato que falló puede venir de un sensor desconocido y el error igual debe poder registrarse.")
 
 # ---------- 6. Relational model ----------
 
@@ -332,18 +332,18 @@ table([1700, 2000, 2500, 2826], ["Tabla", "Clave primaria", "Claves foráneas", 
     ["sucursal", "id", "-", "nombre"],
     ["sensor", "id (código del sensor)", "sucursal_id -> sucursal", "tipo, ubicacion"],
     ["umbral", "id", "sucursal_id -> sucursal", "tipo, minimo, maximo (minimo < maximo; único por sucursal y tipo)"],
-    ["lectura", "id", "sensor_id -> sensor", "valor, fecha_hora"],
-    ["alerta", "id", "sensor_id -> sensor; lectura_id -> lectura (opcional)", "tipo, mensaje, fecha_hora"],
-    ["error_insercion", "id", "sensor_id -> sensor", "valor, fecha_hora_lectura, mensaje, intentos, fecha_hora_error"],
+    ["lectura", "id", "sensor_id -> sensor", "valor, fecha_hora (único por sensor y fecha_hora)"],
+    ["alerta", "id", "sensor_id -> sensor; lectura_id -> lectura (obligatoria si es FUERA_DE_RANGO)", "tipo, mensaje, fecha_hora"],
+    ["error_insercion", "id", "- (sin FK a propósito)", "sensor_id (texto), valor, fecha_hora_lectura, mensaje, intentos, fecha_hora_error"],
 ])
 p()
 h2("6.1 Script SQL")
 p("El archivo schema_rf11.sql crea la base de datos en MySQL 8 con el mismo modelo del diagrama. Sus decisiones principales:")
 for t in ["Motor InnoDB y juego de caracteres utf8mb4, que garantizan integridad referencial y tildes correctas.",
-          "Claves foráneas en todas las relaciones, para que no existan lecturas, alertas ni errores de sensores inexistentes.",
-          "Índice (sensor_id, fecha_hora) en lectura, que acelera las consultas por sensor y rango de fechas.",
-          "Restricción CHECK (minimo < maximo) en umbral y valores DECIMAL(8,2) para las mediciones.",
-          "Tres consultas de ejemplo para el paso 3 del flujo: lecturas de un sensor en un rango, temperaturas fuera del umbral y promedio diario por sucursal."]:
+          "Claves foráneas en sensor, umbral, lectura y alerta, para que no existan lecturas ni alertas de sensores inexistentes. error_insercion no tiene clave foránea a propósito: el dato que falló pudo venir de un sensor desconocido y el error igual debe poder registrarse.",
+          "Restricción UNIQUE (sensor_id, fecha_hora) en lectura: acelera las consultas por sensor y rango de fechas y hace que un reintento (INSERT ... ON DUPLICATE KEY UPDATE) no duplique la lectura.",
+          "Restricciones CHECK (minimo < maximo en umbral; una alerta FUERA_DE_RANGO exige lectura_id), que MySQL aplica desde la versión 8.0.16, y valores DECIMAL(8,2) para las mediciones.",
+          "El script se puede ejecutar más de una vez (borra y recrea las tablas). Incluye tres consultas de ejemplo para el paso 3 del flujo: lecturas de un sensor en un rango, temperaturas fuera del umbral y promedio diario por sucursal."]:
     bullet(t)
 
 # ---------- 7. Verification ----------
