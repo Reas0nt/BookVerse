@@ -353,20 +353,9 @@ for t in ["Avance #2 (RF-11): modelar el almacenamiento de los datos de los sens
           "Incorporar las observaciones del docente al modelo antes de implementar."]:
     bullet(t)
 
-# ---------- 8. Closing questions ----------
+# ---------- 8. Conclusion ----------
 
-h1("8. Preguntas de cierre")
-note("Borrador para que el grupo lo ajuste con sus propias palabras y experiencias.")
-rich([("¿Qué aprendimos de la actividad realizada?", True)])
-p("Aprendimos a traducir un requerimiento en dos vistas complementarias: el diagrama de clases, que define qué información se monitorea y cómo se relaciona, y el diagrama de arquitectura, que define cómo viajan los datos desde el sensor hasta la pantalla. También comprendimos que los flujos alternos y las excepciones, como la falta de datos o la pérdida de conexión, deben modelarse desde el inicio.")
-rich([("¿En qué ámbitos podemos utilizar o aplicar lo realizado?", True)])
-p("Podemos aplicarlo en el monitoreo de bodegas, cámaras de frío, salas de servidores o aulas, en sistemas de aforo en comercios y, en general, en cualquier proyecto de IoT que combine sensores, mensajería, base de datos y un panel web.")
-rich([("¿Hubo algún término, definición o parte del proceso que necesitemos reforzar?", True)])
-p("Nos gustaría reforzar los conceptos de mensajería MQTT (calidad de servicio y mensajes retenidos), la diferencia entre SSE y WebSocket, y el uso correcto de las relaciones de agregación y composición en UML.")
-
-# ---------- 9. Conclusion ----------
-
-h1("9. Conclusión")
+h1("8. Conclusión")
 p("Se analizó RF-10 y se elaboraron un diagrama de clases y un diagrama de arquitectura que cubren el flujo normal, el flujo alterno y la excepción del requerimiento. La tabla de verificación muestra que cada paso tiene clases y componentes que lo respaldan, lo que deja una base coherente para el prototipo web.")
 
 doc.save(OUTPUT)

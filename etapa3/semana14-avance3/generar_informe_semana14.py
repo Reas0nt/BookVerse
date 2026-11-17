@@ -238,7 +238,7 @@ for t in ["Identificar los datos que debe incluir el informe y cómo se presenta
           "Elaborar un diagrama UML que represente la estructura del informe y las relaciones entre sus elementos.",
           "Elaborar un diagrama de arquitectura y flujo de datos que muestre cómo cada parte del sistema obtiene la información para generar el informe.",
           "Programar una página web con HTML5, CSS3 y JavaScript que almacene datos de sensores y genere los reportes.",
-          "Validar la calidad del informe y responder las preguntas de cierre."]:
+          "Validar la calidad del informe."]:
     bullet(t)
 
 # ---------- 2. Requirement analysis ----------
@@ -381,21 +381,9 @@ table([2300, 3300, 3426], ["Paso de RF-12", "Diagrama", "Aplicación web"], [
     ["Postcondición: descarga o visualización", "Exportador; panel web y exportación", "Vista en pantalla, CSV, JSON e impresión"],
 ])
 
-# ---------- 9. Closing questions ----------
+# ---------- 9. Conclusion ----------
 
-page_break()
-h1("9. Preguntas de cierre")
-note("Borrador para que el grupo lo ajuste con sus propias palabras y experiencias.")
-rich([("¿Qué aprendimos de la actividad realizada?", True)])
-p("Aprendimos a definir primero qué datos y qué presentación necesita el usuario del informe, y a reflejarlo en un diagrama de clases y en un diagrama de flujo de datos antes de programar. También vimos cómo separar la lógica del informe de la forma de guardar los datos, lo que permite probarla de forma automática y reutilizarla cuando se cambie localStorage por MySQL.")
-rich([("¿En qué ámbitos podemos utilizar o aplicar lo realizado?", True)])
-p("Podemos aplicarlo en informes de monitoreo de cualquier sistema con sensores (bodegas, cámaras de frío, invernaderos, salas de servidores), en paneles de indicadores y en aplicaciones web sencillas que guardan datos en el navegador.")
-rich([("¿Hubo algún término, definición o parte del proceso que necesitemos reforzar?", True)])
-p("Nos gustaría reforzar la definición de los estándares de calidad de un informe, la conexión de la aplicación web con la base de datos real y las pruebas automáticas de la interfaz.")
-
-# ---------- 10. Conclusion ----------
-
-h1("10. Conclusión")
+h1("9. Conclusión")
 p("Se organizaron los elementos del informe de RF-12, se elaboraron el diagrama UML y el diagrama de arquitectura y flujo de datos, y se construyó una aplicación web que almacena lecturas y genera el informe con promedios, alertas críticas, recomendaciones, informe parcial y reintento ante errores. El informe cumple los criterios de calidad definidos y queda listo para conectarse a la base de datos de RF-11.")
 
 doc.save(OUTPUT)

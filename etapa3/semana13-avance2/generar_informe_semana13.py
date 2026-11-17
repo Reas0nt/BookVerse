@@ -236,7 +236,7 @@ for t in ["Analizar RF-11 y cómo el sistema reacciona y registra los datos ante
           "Elaborar un diagrama de clases con las clases principales de captura y procesamiento de datos.",
           "Elaborar un diagrama de arquitectura que muestre cómo los componentes gestionan y almacenan los datos en tiempo real.",
           "Elaborar el modelo entidad-relación (MER) y el modelo relacional con entidades, claves primarias y foráneas, relaciones y atributos.",
-          "Verificar la alineación del diseño con RF-11 y responder las preguntas de cierre."]:
+          "Verificar la alineación del diseño con RF-11."]:
     bullet(t)
 
 # ---------- 2. Requirement analysis ----------
@@ -363,21 +363,9 @@ p()
 p("Coherencia entre los modelos: cada clase del diagrama tiene su entidad en el MER y su tabla en el modelo relacional, y los componentes de la arquitectura corresponden a los módulos que usan esas clases.")
 note("Pendiente: compartir los diagramas con el docente y registrar sus observaciones.")
 
-# ---------- 8. Closing questions ----------
+# ---------- 8. Conclusion ----------
 
-page_break()
-h1("8. Preguntas de cierre")
-note("Borrador para que el grupo lo ajuste con sus propias palabras y experiencias.")
-rich([("¿Qué aprendimos de la actividad realizada?", True)])
-p("Aprendimos a pasar de un modelo de clases a un modelo de datos: del MER, que describe entidades y relaciones sin depender del motor, al modelo relacional con claves primarias, claves foráneas y tipos de datos. También vimos que guardar todas las lecturas, y no solo las anormales, es lo que permite analizar las variaciones de temperatura, y que el manejo de errores de inserción debe diseñarse desde el modelo.")
-rich([("¿En qué ámbitos podemos utilizar o aplicar lo realizado?", True)])
-p("Podemos aplicarlo en el almacenamiento de datos de series de tiempo de cualquier sistema IoT (cámaras de frío, invernaderos, salas de servidores), en sistemas de reportes y análisis, y en el diseño de bases de datos relacionales para otros proyectos.")
-rich([("¿Hubo algún término, definición o parte del proceso que necesitemos reforzar?", True)])
-p("Nos gustaría reforzar la normalización, el diseño de índices para consultas sobre grandes volúmenes de lecturas y las estrategias de reintento (cuántos intentos y cuánto esperar entre ellos).")
-
-# ---------- 9. Conclusion ----------
-
-h1("9. Conclusión")
+h1("8. Conclusión")
 p("Se analizó RF-11 y se elaboraron el diagrama de clases, el diagrama de arquitectura, el MER, el modelo relacional y un script SQL para MySQL. El diseño cubre los tres pasos del flujo normal y la excepción de inserción fallida, y conserva el historial de temperaturas y sus alertas para el análisis de variaciones y los reportes de RF-12.")
 
 doc.save(OUTPUT)
