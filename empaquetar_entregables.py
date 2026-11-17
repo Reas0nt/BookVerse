@@ -54,8 +54,21 @@ DELIVERABLES = [
         "etapa3/semana13-avance2/diagramas/relacional_rf11.png",
         "etapa3/semana13-avance2/diagramas/relacional_rf11.puml",
     ]),
+    ("S14_Etapa3_Avance3_RF12_Informes", [
+        "etapa3/semana14-avance3/Informe_Avance3_RF12_Semana14.docx",
+        "etapa3/semana14-avance3/diagramas/clases_rf12.png",
+        "etapa3/semana14-avance3/diagramas/clases_rf12.puml",
+        "etapa3/semana14-avance3/diagramas/arquitectura_rf12.png",
+        "etapa3/semana14-avance3/diagramas/arquitectura_rf12.puml",
+    ]),
 ]
 
+# (destination folder inside entregables/, source folder relative to the repo root); tree is kept
+S14 = "S14_Etapa3_Avance3_RF12_Informes"
+DELIVERABLE_TREES = [
+    (f"{S14}/webapp", "etapa3/semana14-avance3/webapp"),
+    (f"{S14}/capturas", "etapa3/semana14-avance3/capturas"),
+]
 SYSTEM_FILES = ["requirements.txt", "requirements-dev.txt"]
 SYSTEM_SKIP = {"__pycache__", "instance", ".pytest_cache"}
 
@@ -63,6 +76,7 @@ SYSTEM_SKIP = {"__pycache__", "instance", ".pytest_cache"}
 def check_sources():
     """Fail before touching the output folder if any source file is missing."""
     required = [rel for _, files in DELIVERABLES for rel in files] + SYSTEM_FILES
+    required += [src for _, src in DELIVERABLE_TREES]
     required += ["semana11-evaluacion/diagramas", "sistema/README.md"]
     missing = [rel for rel in required if not (ROOT / rel).exists()]
     if missing:
@@ -77,6 +91,11 @@ def copy_deliverables():
         for rel in files:
             src = ROOT / rel
             shutil.copy2(src, dest / src.name)
+
+
+def copy_trees():
+    for dest, src in DELIVERABLE_TREES:
+        shutil.copytree(ROOT / src, OUT / dest, ignore=shutil.ignore_patterns("__pycache__", "node_modules"))
 
 
 def copy_diagrams_and_video():
@@ -127,6 +146,7 @@ def main():
         shutil.rmtree(OUT)
     OUT.mkdir()
     copy_deliverables()
+    copy_trees()
     copy_diagrams_and_video()
     zip_system()
     export_pdfs()

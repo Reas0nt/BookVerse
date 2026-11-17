@@ -9,7 +9,7 @@ It is separate from Stage 2 (equipment maintenance, RF-06 to RF-09), which lives
 |---|---|---|---|---|
 | `semana12-avance1/` | Avance #1 | RF-10 Sensor monitoring | UML class diagram + high-level architecture diagram | `docs/Pauta_Avance1_Semana12.docx` |
 | `semana13-avance2/` | Avance #2 | RF-11 Sensor data storage | Class diagram, architecture diagram, ER model (MER), relational model + MySQL schema | `docs/Pauta_Avance2_Semana13.docx` |
-| `semana14-avance3/` | Avance #3 | RF-12 Operational reports | UML report design + data flow diagram | Pending |
+| `semana14-avance3/` | Avance #3 | RF-12 Operational reports | UML report diagram, data flow diagram, web app, Word report (done) | `docs/Pauta_Avance3_Semana14.docx` |
 | `semana15-avance4/` | Avance #4 | RF-13 Testing and adjustments | Test cases, results, observations and adjustments | Pending |
 | `semana16-evaluacion/` | Final evaluation | RF-10 to RF-13 | Web prototype, metacognitive sheet, induction matrix | `docs/Rubrica_Etapa3.docx` |
 
@@ -23,6 +23,7 @@ Confirm each one when its guideline is published.
 | `docs/Caso_Etapa3.docx` | Case study with RF-10 to RF-13 detail (actor, flows, exceptions) |
 | `docs/Pauta_Avance1_Semana12.docx` | Avance #1 guideline (RF-10 UML model) |
 | `docs/Pauta_Avance2_Semana13.docx` | Avance #2 guideline (RF-11 data model) |
+| `docs/Pauta_Avance3_Semana14.docx` | Avance #3 guideline (RF-12 report design and web page) |
 | `docs/Rubrica_Etapa3.docx` | Stage 3 rubric |
 
 ## How Stage 3 is graded
@@ -48,7 +49,12 @@ cd etapa3/semana12-avance1
 cd ../semana13-avance2
 ../../venv/bin/python generar_diagramas.py
 ../../venv/bin/python generar_informe_semana13.py
+# Avance #3 (week 14): diagrams, report, web app tests
+cd ../semana14-avance3
+../../venv/bin/python generar_diagramas.py
+../../venv/bin/python generar_informe_semana14.py
 cd ../..
+node --test etapa3/semana14-avance3/webapp/tests/*.test.js
 
 # Package every deliverable (Stage 2 and Stage 3) into entregables/ and entregables.zip
 venv/bin/python empaquetar_entregables.py
