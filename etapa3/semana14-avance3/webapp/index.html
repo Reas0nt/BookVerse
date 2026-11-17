@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BookVerse - Sensores e informes</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1>BookVerse</h1>
+    <p>Monitoreo de sensores y generación de informes (RF-12)</p>
+    <nav aria-label="Secciones">
+      <a href="#registro">Registrar lectura</a>
+      <a href="#lecturas">Lecturas</a>
+      <a href="#umbrales">Umbrales</a>
+      <a href="#informe">Informe</a>
+    </nav>
+  </header>
+
+  <main>
+    <div id="notice" class="notice" role="status" hidden></div>
+
+    <section id="registro" class="card">
+      <h2>1. Registrar lectura</h2>
+      <form id="form-lectura" novalidate>
+        <div class="grid">
+          <label>Sucursal
+            <input id="f-sucursal" name="sucursal" type="text" list="lista-sucursales" required value="Sucursal Centro">
+            <datalist id="lista-sucursales"></datalist>
+          </label>
+          <label>Sensor
+            <select id="f-sensor" name="sensorTipo" required>
+              <option value="temperatura">Temperatura (°C)</option>
+              <option value="humedad">Humedad (%)</option>
+              <option value="conteo">Conteo de personas</option>
+            </select>
+          </label>
+          <label>Valor
+            <input id="f-valor" name="valor" type="number" step="any" required>
+          </label>
+          <label>Fecha y hora
+            <input id="f-fecha" name="fechaHora" type="datetime-local" step="1" required>
+          </label>
+        </div>
+        <div class="actions">
+          <button type="submit">Guardar lectura</button>
+          <button type="button" id="btn-simular" class="secondary">Simular lecturas (últimas 24 h)</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="lecturas" class="card">
+      <h2>2. Lecturas almacenadas</h2>
+      <div class="actions">
+        <label class="inline">Filtrar por sensor
+          <select id="filtro-sensor">
+            <option value="">Todos</option>
+            <option value="temperatura">Temperatura</option>
+            <option value="humedad">Humedad</option>
+            <option value="conteo">Conteo de personas</option>
+          </select>
+        </label>
+        <button type="button" id="btn-borrar" class="danger">Borrar todo</button>
+      </div>
+      <p id="contador" class="muted"></p>
+      <div class="table-wrap">
+        <table>
+          <caption class="sr-only">Lecturas almacenadas</caption>
+          <thead><tr><th>Fecha y hora</th><th>Sucursal</th><th>Sensor</th><th>Valor</th></tr></thead>
+          <tbody id="tbody-lecturas"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="umbrales" class="card">
+      <h2>3. Umbrales</h2>
+      <form id="form-umbrales" novalidate>
+        <div class="grid">
+          <fieldset><legend>Temperatura (°C)</legend>
+            <label>Mínimo <input type="number" step="any" id="u-temperatura-min"></label>
+            <label>Máximo <input type="number" step="any" id="u-temperatura-max"></label>
+          </fieldset>
+          <fieldset><legend>Humedad (%)</legend>
+            <label>Mínimo <input type="number" step="any" id="u-humedad-min"></label>
+            <label>Máximo <input type="number" step="any" id="u-humedad-max"></label>
+          </fieldset>
+          <fieldset><legend>Conteo de personas</legend>
+            <label>Mínimo <input type="number" step="any" id="u-conteo-min"></label>
+            <label>Máximo <input type="number" step="any" id="u-conteo-max"></label>
+          </fieldset>
+        </div>
+        <div class="actions"><button type="submit">Guardar umbrales</button></div>
+      </form>
+    </section>
+
+    <section id="informe" class="card">
+      <h2>4. Generar informe</h2>
+      <form id="form-informe" novalidate>
+        <div class="grid">
+          <label>Sucursal
+            <select id="i-sucursal"></select>
+          </label>
+          <label>Desde (incluida)
+            <input type="datetime-local" id="i-desde" required>
+          </label>
+          <label>Hasta (excluida)
+            <input type="datetime-local" id="i-hasta" required>
+          </label>
+        </div>
+        <div class="actions"><button type="submit">Generar informe</button></div>
+      </form>
+      <div id="error-informe" class="notice error" role="alert" hidden>
+        <p id="error-texto"></p>
+        <button type="button" id="btn-reintentar">Reintentar</button>
+      </div>
+      <div id="acciones-informe" class="actions" hidden>
+        <button type="button" id="btn-csv" class="secondary">Descargar CSV</button>
+        <button type="button" id="btn-json" class="secondary">Descargar JSON</button>
+        <button type="button" id="btn-imprimir" class="secondary">Imprimir / guardar PDF</button>
+      </div>
+      <article id="informe-salida" class="report" hidden></article>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>BookVerse - Etapa 3, Avance #3. Los datos se guardan solo en este navegador (localStorage).</p>
+  </footer>
+
+  <script src="js/report.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
