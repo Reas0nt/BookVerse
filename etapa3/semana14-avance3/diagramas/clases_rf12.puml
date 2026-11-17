@@ -1,0 +1,78 @@
+@startuml clases_rf12
+title RF-12 Informe operacional - Diagrama de clases
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam class {
+  BackgroundColor #FDFEFE
+  BorderColor #34495E
+  ArrowColor #34495E
+}
+hide empty members
+
+class Informe {
+  - id: int
+  - fechaGeneracion: DateTime
+  - periodoDesde: DateTime
+  - periodoHasta: DateTime
+  - estado: EstadoInforme
+  - avisos: List<String>
+}
+
+enum EstadoInforme {
+  COMPLETO
+  PARCIAL
+  ERROR
+}
+
+class ResumenSensor {
+  - tipo: TipoSensor
+  - promedio: double
+  - minimo: double
+  - maximo: double
+  - cantidadLecturas: int
+}
+
+class AlertaCritica {
+  - mensaje: String
+  - fechaHora: DateTime
+}
+
+class Recomendacion {
+  - mensaje: String
+  - prioridad: int
+}
+
+class GeneradorInforme {
+  + generar(sucursalId: int, desde: DateTime, hasta: DateTime): Informe
+}
+
+interface RepositorioLecturas <<RF-11>> {
+  + buscarPorSensor(sensorId: String, desde: DateTime, hasta: DateTime): List<Lectura>
+}
+
+interface Exportador {
+  + exportar(informe: Informe): void
+}
+
+class Sucursal {
+  - id: int
+  - nombre: String
+}
+
+Sucursal "1" -- "0..*" Informe : corresponde a
+Informe "1" *-- "0..*" ResumenSensor : resume
+Informe "1" *-- "0..*" AlertaCritica : destaca
+Informe "1" *-- "0..*" Recomendacion : sugiere
+Informe --> EstadoInforme
+AlertaCritica "0..*" ..> "1" Alerta : basada en
+GeneradorInforme ..> Informe : crea
+GeneradorInforme --> "1" RepositorioLecturas : consulta
+GeneradorInforme ..> Umbral : compara
+Exportador ..> Informe : descarga / imprime
+
+note bottom of Informe
+  Si faltan datos críticos:
+  estado = PARCIAL y se
+  detallan en avisos.
+end note
+@enduml

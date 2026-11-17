@@ -1,0 +1,43 @@
+@startuml arquitectura_rf12
+title RF-12 Informe operacional - Arquitectura y flujo de datos
+top to bottom direction
+skinparam shadowing false
+skinparam componentStyle rectangle
+skinparam defaultFontName Arial
+skinparam ArrowColor #34495E
+skinparam rectangle {
+  BackgroundColor #FDFEFE
+  BorderColor #34495E
+}
+
+rectangle "Sensores en sucursal\n(ESP32 + DHT22 + contador)" as Sensores
+rectangle "Broker MQTT\n(Mosquitto)" as Broker
+rectangle "Módulo de monitoreo\n(RF-10 / RF-11)" as Monitoreo
+database "MySQL\n(lecturas, umbrales, alertas)" as DB
+
+rectangle "Módulo de informes (RF-12)" {
+  rectangle "1. Consulta lecturas\n2. Calcula promedios\n3. Detecta alertas críticas\n4. Genera recomendaciones" as Informes
+}
+
+rectangle "Panel web\n(visualización)" as Panel
+rectangle "Prototipo del panel\nHTML5 + CSS3 + JS\n(datos en localStorage)" as Prototipo
+rectangle "Exportación\n(CSV / impresión PDF)" as Export
+actor "Gerente de\noperaciones" as Gerente
+
+Sensores --> Broker : temperatura, aforo
+Broker --> Monitoreo : mensajes MQTT
+Monitoreo --> DB : lecturas y alertas
+DB --> Informes : lecturas, umbrales, alertas
+Informes --> Panel : informe
+Informes --> Export : informe
+Panel ..> Prototipo : se prototipa en
+Panel --> Gerente : promedios, alertas,\nrecomendaciones
+Export --> Gerente : archivo descargable
+
+note right of Informes
+  Faltan datos críticos:
+  informe PARCIAL + notificación.
+  Error al generar: se solicita
+  reintento al gerente.
+end note
+@enduml
